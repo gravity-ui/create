@@ -1,0 +1,49 @@
+{
+  "name": "@gravity-ui/create",
+  "version": "0.0.0",
+  "description": "Create a new Gravity UI project",
+  "type": "module",
+  "bin": {
+    "create-gravity-ui": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.publish.json && node scripts/chmod-bin.ts",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint --quiet",
+    "lint:prettier": "prettier --list-different '**/*.ts'",
+    "test": "node --import ./scripts/test-runner-register.js --test",
+    "knip": "knip"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@gravity-ui/eslint-config": "^4.3.2",
+    "@gravity-ui/prettier-config": "^1.1.1",
+    "@gravity-ui/tsconfig": "^1.0.0",
+    "@types/node": "^24.13.2",
+    "eslint": "^9.39.4",
+    "knip": "^6.23.0",
+    "prettier": "^3.9.4",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gravity-ui/create.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gravity-ui/create/issues"
+  },
+  "homepage": "https://github.com/gravity-ui/create#readme",
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
+  }
+}

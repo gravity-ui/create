@@ -1,0 +1,13 @@
+export const i18n = {
+    label_cancel: 'Operation cancelled.',
+    label_destination: 'Destination folder',
+    'label_registry-question': 'Use custom npm registry?',
+    label_registry: 'Registry URL',
+    label_language: 'Language',
+    'label_has-frontend': 'Does your project have a frontend?',
+    'label_has-styles': 'Will your project have styles?',
+    'label_has-react': 'Will your project use React?',
+    'label_has-backend': 'Will your project have a backend?',
+    label_yes: 'Yes',
+    label_no: 'No',
+};
