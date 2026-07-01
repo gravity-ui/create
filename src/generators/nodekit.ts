@@ -16,20 +16,17 @@ export async function generateNodekit(model: ProjectModel, fs: FileSystem): Prom
 
     const serverFile = path.join(model.destination, 'src', 'server', `index.${ext}`);
 
-    await fs.writeFile(
-        serverFile,
-        model.hasFrontend ? layoutServer(model) : helloWorldServer(model),
-    );
+    await fs.writeFile(serverFile, model.hasFrontend ? layoutServer(model) : helloWorldServer());
 }
 
-function helloWorldServer(model: ProjectModel): string {
+function helloWorldServer(): string {
     return `import {NodeKit} from '@gravity-ui/nodekit';
 import {ExpressKit} from '@gravity-ui/expresskit';
 
-const nodekit = new NodeKit({appName: '${model.projectName}'});
+const nodekit = new NodeKit({});
 
 const app = new ExpressKit(nodekit, {
-  'GET /': (req, res) => {
+  'GET /': (_, res) => {
     res.send('Hello, world!');
   },
 });
@@ -45,7 +42,7 @@ function layoutServer(model: ProjectModel): string {
 import {ExpressKit} from '@gravity-ui/expresskit';
 import {createRenderFunction, createLayoutPlugin} from '@gravity-ui/app-layout';
 
-const nodekit = new NodeKit({appName: '${model.projectName}'});
+const nodekit = new NodeKit({});
 
 const renderLayout = createRenderFunction([
   createLayoutPlugin({
@@ -55,7 +52,7 @@ const renderLayout = createRenderFunction([
 ]);
 
 const app = new ExpressKit(nodekit, {
-  'GET *': (req, res) => {
+  'GET *': (_, res) => {
     res.send(renderLayout({title: '${model.projectName}'}));
   },
 });
