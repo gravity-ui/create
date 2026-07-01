@@ -134,16 +134,6 @@ export const CliSchema = z
                 }),
             ),
 
-        force: z
-            .boolean()
-            .default(false)
-            .meta(
-                flagMeta({
-                    description: 'Overwrite non-empty destination directory',
-                    group: 'mode',
-                }),
-            ),
-
         help: z
             .boolean()
             .default(false)
