@@ -40,6 +40,7 @@ export function parseCli(argv: string[]): ParsedCli {
         args: argv,
         options: buildParseArgsOptions(),
         allowPositionals: true,
+        allowNegative: true,
         strict: true,
     });
 
