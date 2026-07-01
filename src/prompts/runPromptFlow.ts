@@ -60,7 +60,10 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.language = cli.language;
     } else if (cli.yes) {
-        model.language = 'ts';
+        const value = 'ts';
+        skippedStep(i18n.label_language, value);
+
+        model.language = value;
     } else {
         await askLanguage(model);
     }
@@ -71,7 +74,10 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.hasFrontend = cli.frontend;
     } else if (cli.yes) {
-        model.hasFrontend = true;
+        const value = true;
+        skippedStep(i18n['label_has-frontend'], yesNo(value));
+
+        model.hasFrontend = value;
     } else {
         await askFrontend(model);
     }
@@ -83,7 +89,10 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
             model.hasStyles = cli.styles;
         } else if (cli.yes) {
-            model.hasStyles = true;
+            const value = true;
+            skippedStep(i18n['label_has-styles'], yesNo(value));
+
+            model.hasStyles = value;
         } else {
             await askStyles(model);
         }
@@ -94,7 +103,10 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
             model.hasReact = cli.react;
         } else if (cli.yes) {
-            model.hasReact = true;
+            const value = true;
+            skippedStep(i18n['label_has-react'], yesNo(value));
+
+            model.hasReact = value;
         } else {
             await askReact(model);
         }
@@ -106,7 +118,10 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.hasBackend = cli.backend;
     } else if (cli.yes) {
-        model.hasBackend = false;
+        const value = false;
+        skippedStep(i18n['label_has-backend'], yesNo(value));
+
+        model.hasBackend = value;
     } else {
         await askBackend(model);
     }
