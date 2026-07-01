@@ -6,7 +6,6 @@
  * directly.
  */
 export interface FileSystem {
-    mkdir(path: string, opts?: {recursive?: boolean}): Promise<void>;
     writeFile(path: string, content: string): Promise<void>;
 }
 

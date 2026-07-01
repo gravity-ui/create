@@ -1,6 +1,6 @@
 import type {ProjectModel} from '../model/index.js';
-import {realFs} from '../utils/fs.js';
-import {createMemFs, isMemFs} from '../utils/memfs.js';
+import {flushFiles} from '../utils/fs.js';
+import {createMemFs} from '../utils/memfs.js';
 
 import {generateBase} from './base.js';
 import {generateBundling} from './bundle.js';
@@ -15,9 +15,7 @@ export async function runGenerators(
     model: ProjectModel,
     options: GenerateOptions = {},
 ): Promise<GenerateResult> {
-    const fs = options.dryRun ? createMemFs() : realFs;
-
-    await fs.mkdir(model.destination, {recursive: true});
+    const fs = createMemFs();
 
     // Order matters: feature generators register deps/scripts first,
     // base generator writes the final package.json last.
@@ -29,7 +27,11 @@ export async function runGenerators(
     generateBundling(model);
     await generateBase(model, fs);
 
+    if (!options.dryRun) {
+        await flushFiles(fs.files);
+    }
+
     return {
-        files: isMemFs(fs) ? fs.files : [],
+        files: fs.files,
     };
 }

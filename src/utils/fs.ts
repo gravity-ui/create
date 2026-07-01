@@ -1,21 +1,24 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import type {FileSystem} from './types.js';
+import type {CapturedFile, FileSystem} from './types.js';
 
 /**
- * The real filesystem implementation. The only place in the codebase
- * allowed to import node:fs/promises directly.
+ * Writes captured files to the real filesystem in parallel. Generators
+ * always write through an in-memory FileSystem first; this is the only
+ * place that touches node:fs/promises directly.
  */
-export const realFs: FileSystem = {
-    async mkdir(p, opts) {
-        await fs.mkdir(p, opts);
-    },
-    async writeFile(p, content) {
-        await fs.mkdir(path.dirname(p), {recursive: true});
-        await fs.writeFile(p, content, 'utf8');
-    },
-};
+export async function flushFiles(files: readonly CapturedFile[]): Promise<void> {
+    const allDirs = new Set(files.map((f) => path.dirname(f.path)));
+    // mkdir(recursive) already creates ancestors, so only the deepest dir
+    // per branch needs an explicit call.
+    const leafDirs = [...allDirs].filter(
+        (dir) => ![...allDirs].some((other) => other !== dir && other.startsWith(dir + path.sep)),
+    );
+
+    await Promise.all(leafDirs.map((d) => fs.mkdir(d, {recursive: true})));
+    await Promise.all(files.map((f) => fs.writeFile(f.path, f.content, 'utf8')));
+}
 
 /**
  * Helper: write a JS value as a JSON file. Generators use this via the
