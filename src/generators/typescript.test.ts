@@ -4,7 +4,7 @@ import {setupGeneratorTest} from './__fixtures__/setupGeneratorTest.js';
 import {generateTypeScript} from './typescript.js';
 
 test.describe('typescript generator', () => {
-    test('TypeScript project generates tsconfig.json', async (t: TestContext) => {
+    test('TypeScript project generates tsconfig.json + tsconfig.build.json', async (t: TestContext) => {
         const {file} = await setupGeneratorTest(generateTypeScript, {
             destination: '/project',
             projectName: 'my-app',
@@ -14,6 +14,10 @@ test.describe('typescript generator', () => {
         const tsconfig = file('/project/tsconfig.json');
         t.assert.ok(tsconfig);
         t.assert.equal(tsconfig.content.extends, '@gravity-ui/tsconfig/tsconfig.json');
+
+        const buildTsconfig = file('/project/tsconfig.build.json');
+        t.assert.ok(buildTsconfig);
+        t.assert.equal(buildTsconfig.content.compilerOptions.declaration, true);
     });
 
     test('frontend + backend project generates referenced tsconfigs and tsc -b', async (t: TestContext) => {

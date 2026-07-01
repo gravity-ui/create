@@ -19,17 +19,26 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
         const tsconfig: Record<string, unknown> = {
             extends: '@gravity-ui/tsconfig/tsconfig.json',
             compilerOptions: {
+                target: 'ES2022',
+                module: 'NodeNext',
+                moduleResolution: 'NodeNext',
                 outDir: './dist',
                 rootDir: './src',
             },
             include: ['src/**/*'],
         };
 
-        if (model.hasReact) {
-            (tsconfig.compilerOptions as Record<string, unknown>).jsx = 'react-jsx';
-        }
-
         await writeJson(fs, path.join(model.destination, 'tsconfig.json'), tsconfig);
+
+        const buildTsconfig: Record<string, unknown> = {
+            extends: './tsconfig.json',
+            compilerOptions: {
+                declaration: true,
+            },
+        };
+
+        await writeJson(fs, path.join(model.destination, 'tsconfig.build.json'), buildTsconfig);
+
         return;
     }
 
@@ -67,7 +76,11 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
             include: ['**/*'],
         };
 
-        await writeJson(fs, path.join(model.destination, 'src/server/tsconfig.json'), serverTsconfig);
+        await writeJson(
+            fs,
+            path.join(model.destination, 'src/server/tsconfig.json'),
+            serverTsconfig,
+        );
         references.push({path: './src/server'});
     }
 

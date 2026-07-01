@@ -3,6 +3,7 @@ import {realFs} from '../utils/fs.js';
 import {createMemFs, isMemFs} from '../utils/memfs.js';
 
 import {generateBase} from './base.js';
+import {generateBundling} from './bundle.js';
 import {generateLinters} from './linters.js';
 import {generateNodekit} from './nodekit.js';
 import {generateReact} from './react.js';
@@ -25,6 +26,7 @@ export async function runGenerators(
     await generateReact(model, fs);
     await generateNodekit(model, fs);
     await generateLinters(model, fs);
+    generateBundling(model);
     await generateBase(model, fs);
 
     return {
