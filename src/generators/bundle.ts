@@ -7,7 +7,7 @@ import type {FileSystem} from '../utils/types.js';
 import renderAppBuilderConfigJs from './templates/app-builder.config.js.hbs.js';
 import renderAppBuilderConfigTs from './templates/app-builder.config.ts.hbs.js';
 
-export function generateBundling(model: ProjectModel, fs: FileSystem) {
+export async function generateBundling(model: ProjectModel, fs: FileSystem) {
     const hasAppBuilder = model.hasBackend || model.hasFrontend;
 
     if (hasAppBuilder) {
@@ -18,12 +18,12 @@ export function generateBundling(model: ProjectModel, fs: FileSystem) {
 
         if (model.hasReact) {
             if (model.language === 'ts') {
-                fs.writeFile(
+                await fs.writeFile(
                     path.join(model.destination, 'app-builder.config.ts'),
                     renderAppBuilderConfigTs({}),
                 );
             } else {
-                fs.writeFile(
+                await fs.writeFile(
                     path.join(model.destination, 'app-builder.config.js'),
                     renderAppBuilderConfigJs({}),
                 );

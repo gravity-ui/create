@@ -24,7 +24,7 @@ export async function runGenerators(
     await generateReact(model, fs);
     await generateNodekit(model, fs);
     await generateLinters(model, fs);
-    generateBundling(model);
+    await generateBundling(model, fs);
     await generateBase(model, fs);
 
     if (!options.dryRun) {
