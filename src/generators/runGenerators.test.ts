@@ -113,4 +113,92 @@ test.describe('runGenerators', () => {
         t.assert.equal(pkg.content.devDependencies?.stylelint, undefined);
         t.assert.equal(pkg.content.scripts?.['lint:styles'], undefined);
     });
+
+    test('react + TS project writes app-builder ui layout', async (t: TestContext) => {
+        const model = createEmptyModel();
+        model.destination = '/project';
+        model.projectName = 'my-app';
+        model.language = 'ts';
+        model.hasFrontend = true;
+        model.hasReact = true;
+
+        const result = await runGenerators(model, {dryRun: true});
+        const {file} = filesOf(result);
+
+        const app = file('/project/src/ui/components/App/App.tsx');
+        t.assert.ok(app);
+        t.assert.equal(
+            app.content,
+            `import {ThemeProvider} from '@gravity-ui/uikit';
+
+export function App() {
+  return (
+    <ThemeProvider theme="light">
+      <h1>Hello, Gravity UI!</h1>
+    </ThemeProvider>
+  );
+}
+`,
+        );
+
+        const barrel = file('/project/src/ui/components/index.ts');
+        t.assert.ok(barrel);
+        t.assert.equal(barrel.content, `export {App} from './App/App';\n`);
+
+        const entry = file('/project/src/ui/entry/my-app-app.tsx');
+        t.assert.ok(entry);
+        t.assert.equal(
+            entry.content,
+            `import {createRoot} from 'react-dom/client';
+
+import {App} from '../components';
+
+createRoot(document.getElementById('root')!).render(<App />);
+`,
+        );
+
+        t.assert.equal(file('/project/src/App.tsx'), null);
+    });
+
+    test('react + JS project uses jsx/js extensions', async (t: TestContext) => {
+        const model = createEmptyModel();
+        model.destination = '/project';
+        model.projectName = 'my-app';
+        model.language = 'js';
+        model.hasFrontend = true;
+        model.hasReact = true;
+
+        const result = await runGenerators(model, {dryRun: true});
+        const {file} = filesOf(result);
+
+        t.assert.ok(file('/project/src/ui/components/App/App.jsx'));
+        t.assert.ok(file('/project/src/ui/components/index.js'));
+
+        const entry = file('/project/src/ui/entry/my-app-app.jsx');
+        t.assert.ok(entry);
+        t.assert.equal(
+            entry.content,
+            `import {createRoot} from 'react-dom/client';
+
+import {App} from '../components';
+
+createRoot(document.getElementById('root')).render(<App />);
+`,
+        );
+    });
+
+    test('frontend without react writes no react files', async (t: TestContext) => {
+        const model = createEmptyModel();
+        model.destination = '/project';
+        model.projectName = 'my-app';
+        model.language = 'ts';
+        model.hasFrontend = true;
+
+        const result = await runGenerators(model, {dryRun: true});
+        const {file} = filesOf(result);
+
+        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
+        t.assert.equal(file('/project/src/ui/components/index.ts'), null);
+        t.assert.equal(file('/project/src/ui/entry/my-app-app.tsx'), null);
+    });
 });

@@ -18,9 +18,12 @@ export async function generateReact(model: ProjectModel, fs: FileSystem): Promis
         addDevDep(model, '@types/react-dom', '^18.0.0');
     }
 
-    const ext = model.language === 'ts' ? 'tsx' : 'jsx';
-    const appFile = path.join(model.destination, 'src', `App.${ext}`);
+    const isTs = model.language === 'ts';
+    const jsxExt = isTs ? 'tsx' : 'jsx';
+    const fileExt = isTs ? 'ts' : 'js';
+    const uiDir = path.join(model.destination, 'src', 'ui');
 
+    const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
     await fs.writeFile(
         appFile,
         `import {ThemeProvider} from '@gravity-ui/uikit';
@@ -32,6 +35,23 @@ export function App() {
     </ThemeProvider>
   );
 }
+`,
+    );
+
+    const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
+    await fs.writeFile(barrelFile, `export {App} from './App/App';\n`);
+
+    const rootElement = isTs
+        ? "document.getElementById('root')!"
+        : "document.getElementById('root')";
+    const entryFile = path.join(uiDir, 'entry', `${model.projectName}-app.${jsxExt}`);
+    await fs.writeFile(
+        entryFile,
+        `import {createRoot} from 'react-dom/client';
+
+import {App} from '../components';
+
+createRoot(${rootElement}).render(<App />);
 `,
     );
 }

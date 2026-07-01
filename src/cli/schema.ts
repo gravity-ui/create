@@ -1,4 +1,8 @@
+import path from 'node:path';
+
 import {z} from 'zod';
+
+import {isKebabCase} from '../utils/kebabCase.js';
 
 export type FlagGroup = 'project' | 'mode' | 'other';
 
@@ -169,6 +173,10 @@ export const CliSchema = z
     .refine((d) => !(d.react === true && d.frontend === false), {
         message: '--react requires --frontend',
         path: ['react'],
+    })
+    .refine((d) => !d.out || isKebabCase(path.basename(d.out)), {
+        message: 'Destination folder name must be kebab-case',
+        path: ['out'],
     });
 
 export type ParsedCli = z.infer<typeof CliSchema>;
