@@ -44,7 +44,7 @@ export function App() {
     const rootElement = isTs
         ? "document.getElementById('root')!"
         : "document.getElementById('root')";
-    const entryFile = path.join(uiDir, 'entry', `${model.projectName}-app.${jsxExt}`);
+    const entryFile = path.join(uiDir, 'entries', `${model.projectName}-app.${jsxExt}`);
     await fs.writeFile(
         entryFile,
         `import {createRoot} from 'react-dom/client';
