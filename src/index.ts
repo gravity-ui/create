@@ -35,7 +35,7 @@ async function main(): Promise<void> {
         process.exit(0);
     }
 
-    p.intro(styleText(['bgCyan', 'black'], ' @gravity-ui/create '));
+    p.intro(styleText(['bgCyan', 'black'], '🪐 @gravity-ui/create '));
 
     const model = createEmptyModel();
     await runPromptFlow(model, cli);
