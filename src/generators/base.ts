@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
 import {writeJson} from '../utils/fs.js';
+import {isModulePackage} from '../utils/isModulePackage.js';
 import type {FileSystem} from '../utils/types.js';
 
 import renderGitignore from './templates/.gitignore.hbs.js';
@@ -13,6 +14,7 @@ export async function generateBase(model: ProjectModel, fs: FileSystem): Promise
         name: model.projectName,
         version: '0.0.0',
         private: true,
+        ...(isModulePackage(model) ? {module: true} : {}),
         scripts: model.scripts,
         dependencies: model.packages.dependencies,
         devDependencies: model.packages.devDependencies,

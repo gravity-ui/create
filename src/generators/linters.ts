@@ -1,32 +1,32 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
-import {writeJson} from '../utils/fs.js';
+import {isModulePackage} from '../utils/isModulePackage.js';
 import {addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
 import renderPrettierrc from './templates/.prettierrc.js.hbs.js';
+import renderEslintConfig from './templates/eslint.config.js.hbs.js';
 
 export async function generateLinters(model: ProjectModel, fs: FileSystem): Promise<void> {
-    addDevDep(model, 'eslint', '^8.57.0');
-    addDevDep(model, 'prettier', '^3.2.0');
-    addDevDep(model, '@gravity-ui/eslint-config', '^3.0.0');
-    addDevDep(model, '@gravity-ui/prettier-config', '^1.1.0');
+    const isModule = isModulePackage(model);
+
+    addDevDep(model, 'eslint', '^9.0.0');
+    addDevDep(model, 'prettier', '^3.0.0');
+    addDevDep(model, '@gravity-ui/eslint-config', '^4.0.0');
+    addDevDep(model, '@gravity-ui/prettier-config', '^1.0.0');
 
     addScript(model, 'lint', 'eslint . --ext .js,.jsx,.ts,.tsx');
-    addScript(model, 'format', 'prettier --write .');
+    addScript(model, 'prettier', 'prettier --list-different .');
 
-    const eslintExtends: string[] = ['@gravity-ui/eslint-config'];
-    if (model.language === 'ts') {
-        eslintExtends.push('@gravity-ui/eslint-config/typescript');
-    }
-    if (model.hasReact) {
-        eslintExtends.push('@gravity-ui/eslint-config/client');
-    }
-
-    await writeJson(fs, path.join(model.destination, '.eslintrc.json'), {
-        extends: eslintExtends,
-    });
+    await fs.writeFile(
+        path.join(model.destination, `eslint.config.${isModule ? 'js' : 'mjs'}`),
+        renderEslintConfig({
+            hasTypescript: model.language === 'ts',
+            hasReact: model.hasReact,
+            hasBackend: model.hasBackend,
+        }),
+    );
 
     await fs.writeFile(path.join(model.destination, '.prettierrc.js'), renderPrettierrc({}));
 }

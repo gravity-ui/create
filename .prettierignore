@@ -1,1 +1,2 @@
+src/generators/templates/**/*.hbs
 src/generators/templates/**/*.hbs.ts
