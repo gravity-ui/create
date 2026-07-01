@@ -4,6 +4,10 @@ import type {ProjectModel} from '../model/index.js';
 import {writeJson} from '../utils/fs.js';
 import type {FileSystem} from '../utils/types.js';
 
+import renderGitignore from './templates/.gitignore.hbs.js';
+import renderNpmrc from './templates/.npmrc.hbs.js';
+import renderReadme from './templates/README.md.hbs.js';
+
 export async function generateBase(model: ProjectModel, fs: FileSystem): Promise<void> {
     const pkg: Record<string, unknown> = {
         name: model.projectName,
@@ -16,17 +20,17 @@ export async function generateBase(model: ProjectModel, fs: FileSystem): Promise
 
     await writeJson(fs, path.join(model.destination, 'package.json'), pkg);
 
-    await fs.writeFile(
-        path.join(model.destination, '.gitignore'),
-        ['node_modules', 'dist', 'build', '.env', '.DS_Store', ''].join('\n'),
-    );
+    await fs.writeFile(path.join(model.destination, '.gitignore'), renderGitignore({}));
 
     await fs.writeFile(
         path.join(model.destination, 'README.md'),
-        `# ${model.projectName}\n\nBootstrapped with @gravity-ui/create.\n`,
+        renderReadme({projectName: model.projectName}),
     );
 
     if (model.registry) {
-        await fs.writeFile(path.join(model.destination, '.npmrc'), `registry=${model.registry}\n`);
+        await fs.writeFile(
+            path.join(model.destination, '.npmrc'),
+            renderNpmrc({registry: model.registry}),
+        );
     }
 }

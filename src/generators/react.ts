@@ -4,6 +4,13 @@ import type {ProjectModel} from '../model/index.js';
 import {addDep, addDevDep} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
+import renderAppJsx from './templates/src/ui/components/App/App.jsx.hbs.js';
+import renderAppTsx from './templates/src/ui/components/App/App.tsx.hbs.js';
+import renderComponentsIndexJs from './templates/src/ui/components/index.js.hbs.js';
+import renderComponentsIndexTs from './templates/src/ui/components/index.ts.hbs.js';
+import renderEntryJsx from './templates/src/ui/entries/entry.jsx.hbs.js';
+import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
+
 export async function generateReact(model: ProjectModel, fs: FileSystem): Promise<void> {
     if (!model.hasReact) {
         return;
@@ -24,34 +31,14 @@ export async function generateReact(model: ProjectModel, fs: FileSystem): Promis
     const uiDir = path.join(model.destination, 'src', 'ui');
 
     const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
-    await fs.writeFile(
-        appFile,
-        `import {ThemeProvider} from '@gravity-ui/uikit';
-
-export function App() {
-  return (
-    <ThemeProvider theme="light">
-      <h1>Hello, Gravity UI!</h1>
-    </ThemeProvider>
-  );
-}
-`,
-    );
+    await fs.writeFile(appFile, isTs ? renderAppTsx({}) : renderAppJsx({}));
 
     const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
-    await fs.writeFile(barrelFile, `export {App} from './App/App';\n`);
-
-    const rootElement = isTs
-        ? "document.getElementById('root')!"
-        : "document.getElementById('root')";
-    const entryFile = path.join(uiDir, 'entries', `${model.projectName}-app.${jsxExt}`);
     await fs.writeFile(
-        entryFile,
-        `import {createRoot} from 'react-dom/client';
-
-import {App} from '../components';
-
-createRoot(${rootElement}).render(<App />);
-`,
+        barrelFile,
+        isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
     );
+
+    const entryFile = path.join(uiDir, 'entries', `${model.projectName}-app.${jsxExt}`);
+    await fs.writeFile(entryFile, isTs ? renderEntryTsx({}) : renderEntryJsx({}));
 }

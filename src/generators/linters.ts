@@ -5,6 +5,8 @@ import {writeJson} from '../utils/fs.js';
 import {addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
+import renderPrettierrc from './templates/.prettierrc.js.hbs.js';
+
 export async function generateLinters(model: ProjectModel, fs: FileSystem): Promise<void> {
     addDevDep(model, 'eslint', '^8.57.0');
     addDevDep(model, 'prettier', '^3.2.0');
@@ -26,8 +28,5 @@ export async function generateLinters(model: ProjectModel, fs: FileSystem): Prom
         extends: eslintExtends,
     });
 
-    await fs.writeFile(
-        path.join(model.destination, '.prettierrc.js'),
-        `module.exports = require('@gravity-ui/prettier-config');\n`,
-    );
+    await fs.writeFile(path.join(model.destination, '.prettierrc.js'), renderPrettierrc({}));
 }

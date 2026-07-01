@@ -3,12 +3,15 @@ import importOrderConfig from '@gravity-ui/eslint-config/import-order';
 import {defineConfig, globalIgnores} from 'eslint/config';
 
 export default defineConfig(
-    globalIgnores(['./lib/**'], 'Generated package content'),
+    globalIgnores(
+        ['./lib/**', './src/generators/templates/**/*.hbs.ts'],
+        'Generated package content',
+    ),
     baseConfig,
     importOrderConfig,
     {
         files: ['./src/**/*'],
-        ignores: ['./src/utils/fs.ts', './src/cli/version.ts'],
+        ignores: ['./src/utils/fs.ts'],
         rules: {
             'no-restricted-imports': [
                 'error',

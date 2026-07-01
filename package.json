@@ -11,14 +11,18 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.publish.json && node scripts/chmod-bin.ts",
+    "prebuild": "npm run precompile-templates",
     "prepublishOnly": "npm run build",
     "lint": "eslint --quiet",
     "lint:prettier": "prettier --list-different '**/*.ts'",
+    "precompile-templates": "node scripts/precompile-templates.ts",
+    "pretest": "npm run precompile-templates",
     "test": "node --import ./scripts/test-runner-register.js --test",
     "knip": "knip"
   },
   "dependencies": {
     "@clack/prompts": "^1.6.0",
+    "handlebars": "^4.7.9",
     "zod": "^4.4.3"
   },
   "devDependencies": {

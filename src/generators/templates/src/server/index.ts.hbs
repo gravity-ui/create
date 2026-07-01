@@ -1,0 +1,30 @@
+import {NodeKit} from '@gravity-ui/nodekit';
+import {ExpressKit} from '@gravity-ui/expresskit';
+{{#if hasFrontend}}
+import {createRenderFunction, createLayoutPlugin} from '@gravity-ui/app-layout';
+{{/if}}
+
+const nodekit = new NodeKit({});
+{{#if hasFrontend}}
+
+const renderLayout = createRenderFunction([
+  createLayoutPlugin({
+    manifest: 'dist/public/build/assets-manifest.json',
+    publicPath: '/build/',
+  }),
+]);
+{{/if}}
+
+const app = new ExpressKit(nodekit, {
+{{#if hasFrontend}}
+  'GET *': (_, res) => {
+    res.send(renderLayout({title: '{{projectName}}'}));
+  },
+{{else}}
+  'GET /': (_, res) => {
+    res.send('Hello, world!');
+  },
+{{/if}}
+});
+
+app.run();

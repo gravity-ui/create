@@ -3,5 +3,5 @@
   "compilerOptions": {
     "declaration": true
   },
-  "exclude": ["src/**/*.test.ts", "src/**/__fixtures__/**"]
+  "exclude": ["src/**/*.test.ts", "src/**/__fixtures__/**", "scripts/**/*"]
 }
