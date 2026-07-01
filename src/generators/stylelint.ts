@@ -11,10 +11,14 @@ export async function generateStylelint(model: ProjectModel, fs: FileSystem): Pr
     }
 
     addDevDep(model, 'stylelint', '^16.0.0');
-    addDevDep(model, '@gravity-ui/stylelint-config', '^4.0.0');
-    addScript(model, 'lint:styles', 'stylelint "**/*.{css,scss}"');
+    addDevDep(model, '@gravity-ui/stylelint-config', '^5.0.0');
+    addScript(model, 'lint:styles', 'stylelint "**/*.scss"');
 
     await writeJson(fs, path.join(model.destination, '.stylelintrc.json'), {
-        extends: '@gravity-ui/stylelint-config',
+        extends: [
+            '@gravity-ui/stylelint-config',
+            '@gravity-ui/stylelint-config/order',
+            '@gravity-ui/stylelint-config/prettier',
+        ],
     });
 }
