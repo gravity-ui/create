@@ -91,8 +91,8 @@ function renderHelp(): string {
         ['npm create @gravity-ui', 'fully interactive'],
         ['npm create @gravity-ui -- --path my-app', 'specify path'],
         [
-            'npm create @gravity-ui -- --path my-app --language ts --react -y',
-            'TypeScript + React, no prompts',
+            'npm create @gravity-ui -- --path my-package --language ts --no-frontend --no-backend -y',
+            'basic TypeScript package',
         ],
         [
             'npm create @gravity-ui -- --path my-api --language ts --no-frontend --backend -y',
