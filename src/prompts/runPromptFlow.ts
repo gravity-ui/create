@@ -15,6 +15,7 @@ import {
     askRegistry,
     askStyles,
 } from './questions.js';
+import type {StepConfig} from './types.js';
 
 function yesNo(value: boolean) {
     return value ? i18n.label_yes : i18n.label_no;
@@ -22,6 +23,32 @@ function yesNo(value: boolean) {
 
 function skippedStep(label: string, value: string) {
     log.step(`${label}\n${styleText('dim', value)}`);
+}
+
+async function resolveStep<T>(cliYes: boolean, config: StepConfig<T>): Promise<void> {
+    let value: T | undefined = config.cli;
+
+    if (value === undefined && cliYes) {
+        value = config.yesDefault;
+    }
+
+    if (value === undefined) {
+        await config.ask();
+    } else {
+        skippedStep(config.label, config.format(value));
+
+        config.set(value);
+    }
+}
+
+function languageFormat(value: 'js' | 'ts'): string {
+    return i18n[`label_language-${value}`];
+}
+
+function setModelValue<T extends keyof ProjectModel>(model: ProjectModel, key: T) {
+    return (value: ProjectModel[T]) => {
+        model[key] = value;
+    };
 }
 
 /**
@@ -55,74 +82,54 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
     }
 
     // Language
-    if (cli.language !== undefined) {
-        skippedStep(i18n.label_language, cli.language);
-
-        model.language = cli.language;
-    } else if (cli.yes) {
-        const value = YES_DEFAULTS.language;
-        skippedStep(i18n.label_language, value);
-
-        model.language = value;
-    } else {
-        await askLanguage(model);
-    }
+    await resolveStep(cli.yes, {
+        cli: cli.language,
+        yesDefault: YES_DEFAULTS.language,
+        label: i18n.label_language,
+        format: languageFormat,
+        set: setModelValue(model, 'language'),
+        ask: () => askLanguage(model),
+    });
 
     // Frontend
-    if (cli.frontend !== undefined) {
-        skippedStep(i18n['label_has-frontend'], yesNo(cli.frontend));
-
-        model.hasFrontend = cli.frontend;
-    } else if (cli.yes) {
-        const value = YES_DEFAULTS.frontend;
-        skippedStep(i18n['label_has-frontend'], yesNo(value));
-
-        model.hasFrontend = value;
-    } else {
-        await askFrontend(model);
-    }
+    await resolveStep(cli.yes, {
+        cli: cli.frontend,
+        yesDefault: YES_DEFAULTS.frontend,
+        label: i18n['label_has-frontend'],
+        format: yesNo,
+        set: setModelValue(model, 'hasFrontend'),
+        ask: () => askFrontend(model),
+    });
 
     if (model.hasFrontend) {
         // Styles
-        if (cli.styles !== undefined) {
-            skippedStep(i18n['label_has-styles'], yesNo(cli.styles));
-
-            model.hasStyles = cli.styles;
-        } else if (cli.yes) {
-            const value = YES_DEFAULTS.styles;
-            skippedStep(i18n['label_has-styles'], yesNo(value));
-
-            model.hasStyles = value;
-        } else {
-            await askStyles(model);
-        }
+        await resolveStep(cli.yes, {
+            cli: cli.styles,
+            yesDefault: YES_DEFAULTS.styles,
+            label: i18n['label_has-styles'],
+            format: yesNo,
+            set: setModelValue(model, 'hasStyles'),
+            ask: () => askStyles(model),
+        });
 
         // React
-        if (cli.react !== undefined) {
-            skippedStep(i18n['label_has-react'], yesNo(cli.react));
-
-            model.hasReact = cli.react;
-        } else if (cli.yes) {
-            const value = YES_DEFAULTS.react;
-            skippedStep(i18n['label_has-react'], yesNo(value));
-
-            model.hasReact = value;
-        } else {
-            await askReact(model);
-        }
+        await resolveStep(cli.yes, {
+            cli: cli.react,
+            yesDefault: YES_DEFAULTS.react,
+            label: i18n['label_has-react'],
+            format: yesNo,
+            set: setModelValue(model, 'hasReact'),
+            ask: () => askReact(model),
+        });
     }
 
     // Backend
-    if (cli.backend !== undefined) {
-        skippedStep(i18n['label_has-backend'], yesNo(cli.backend));
-
-        model.hasBackend = cli.backend;
-    } else if (cli.yes) {
-        const value = YES_DEFAULTS.backend;
-        skippedStep(i18n['label_has-backend'], yesNo(value));
-
-        model.hasBackend = value;
-    } else {
-        await askBackend(model);
-    }
+    await resolveStep(cli.yes, {
+        cli: cli.backend,
+        yesDefault: YES_DEFAULTS.backend,
+        label: i18n['label_has-backend'],
+        format: yesNo,
+        set: setModelValue(model, 'hasBackend'),
+        ask: () => askBackend(model),
+    });
 }
