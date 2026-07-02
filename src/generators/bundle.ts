@@ -34,7 +34,7 @@ export async function generateBundling(model: ProjectModel, fs: FileSystem) {
     } else if (model.language === 'ts') {
         addScript(model, 'start', 'node dist/index.js');
         addScript(model, 'dev', 'tsc --watch');
-        addScript(model, 'build', 'tsc -p tsconfg.build.json');
+        addScript(model, 'build', 'tsc -p tsconfig.build.json');
 
         await fs.writeFile(path.join(model.destination, 'src', 'index.ts'), renderSrcIndexTs({}));
     } else if (model.language === 'js') {
