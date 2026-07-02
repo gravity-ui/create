@@ -22,7 +22,7 @@
     "test": "node --import ./scripts/test-runner-register.js --test",
     "test:e2e": "playwright test",
     "preknip": "npm run precompile-templates",
-    "knip": "knip"
+    "knip": "E2E_APP_DIR=. knip"
   },
   "dependencies": {
     "@clack/prompts": "^1.6.0",

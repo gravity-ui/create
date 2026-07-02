@@ -3,8 +3,5 @@
   "tags": ["-lintignore"],
   "prettier": {
     "config": [".prettierrc.cjs"]
-  },
-  "playwright": {
-    "entry": ["e2e/**/*.spec.ts"]
   }
 }
