@@ -8,17 +8,24 @@ import type {FileSystem} from '../utils/types.js';
 import renderGitignore from './templates/.gitignore.hbs.js';
 import renderNpmrc from './templates/.npmrc.hbs.js';
 import renderReadme from './templates/README.md.hbs.js';
+import renderIndexJs from './templates/index.js.hbs.js';
 
 export async function generateBase(model: ProjectModel, fs: FileSystem): Promise<void> {
+    const isModule = isModulePackage(model);
+
     const pkg: Record<string, unknown> = {
         name: model.projectName,
         version: '0.0.0',
         private: true,
-        ...(isModulePackage(model) ? {module: true} : {}),
+        ...(isModule ? {module: true} : {}),
         scripts: model.scripts,
         dependencies: model.packages.dependencies,
         devDependencies: model.packages.devDependencies,
     };
+
+    if (isModule) {
+        await fs.writeFile(path.join(model.destination, 'index.js'), renderIndexJs({}));
+    }
 
     await writeJson(fs, path.join(model.destination, 'package.json'), pkg);
 
