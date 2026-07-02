@@ -1,0 +1,73 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lib
+          path: lib
+
+  test-cli:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: lib
+          path: lib
+      - run: node lib/index.js --yes --out /tmp/plain-app --language ts --no-frontend --no-backend
+      - name: Build and run scaffolded plain-ts project
+        working-directory: /tmp/plain-app
+        run: |
+          npm install
+          npm run build
+          npm start --silent | tee /tmp/plain-app-output.txt
+      - name: Assert CLI output
+        run: grep -q "Hello, world!" /tmp/plain-app-output.txt
+
+  test-e2e-browser:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: lib
+          path: lib
+      - run: node lib/index.js --yes --out /tmp/full-app --language ts --frontend --backend --react --styles
+      - name: Install and build scaffolded full-app project
+        working-directory: /tmp/full-app
+        run: |
+          npm install
+          npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Run Playwright against the scaffolded app
+        run: npx playwright test
+        env:
+          E2E_APP_DIR: /tmp/full-app
+          APP_PORT: '3000'

@@ -2,3 +2,6 @@
 /lib
 /node_modules
 /src/generators/templates/**/*.hbs.ts
+/test-results
+/playwright-report
+/blob-report

@@ -20,6 +20,7 @@
     "precompile-templates": "node scripts/precompile-templates.ts",
     "pretest": "npm run precompile-templates",
     "test": "node --import ./scripts/test-runner-register.js --test",
+    "test:e2e": "playwright test",
     "preknip": "npm run precompile-templates",
     "knip": "knip"
   },
@@ -32,6 +33,7 @@
     "@gravity-ui/eslint-config": "^4.3.2",
     "@gravity-ui/prettier-config": "^1.1.1",
     "@gravity-ui/tsconfig": "^1.0.0",
+    "@playwright/test": "^1.61.1",
     "@types/node": "^24.13.2",
     "eslint": "^9.39.4",
     "knip": "^6.23.0",
