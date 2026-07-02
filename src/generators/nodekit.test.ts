@@ -41,6 +41,6 @@ test.describe('nodekit generator', () => {
         t.assert.ok(server);
         t.assert.match(server.content, /@gravity-ui\/app-layout/);
         t.assert.match(server.content, /assets-manifest\.json/);
-        t.assert.match(server.content, /'GET \*'/);
+        t.assert.match(server.content, /'GET \/'/);
     });
 });
