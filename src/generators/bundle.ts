@@ -6,6 +6,7 @@ import type {FileSystem} from '../utils/types.js';
 
 import renderAppBuilderConfigJs from './templates/app-builder.config.js.hbs.js';
 import renderAppBuilderConfigTs from './templates/app-builder.config.ts.hbs.js';
+import renderSrcIndexTs from './templates/src/index.ts.hbs.js';
 
 export async function generateBundling(model: ProjectModel, fs: FileSystem) {
     const hasAppBuilder = model.hasBackend || model.hasFrontend;
@@ -33,5 +34,7 @@ export async function generateBundling(model: ProjectModel, fs: FileSystem) {
         addScript(model, 'start', 'node dist/index.js');
         addScript(model, 'dev', 'tsc --watch');
         addScript(model, 'build', 'tsc -p tsconfg.build.json');
+
+        await fs.writeFile(path.join(model.destination, 'src', 'index.ts'), renderSrcIndexTs({}));
     }
 }
