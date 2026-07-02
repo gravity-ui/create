@@ -1,8 +1,11 @@
 {{#if hasFrontend}}
+import path from 'node:path';
+
 import {createLayoutPlugin, createRenderFunction} from '@gravity-ui/app-layout';
 {{/if}}
 import {ExpressKit} from '@gravity-ui/expresskit';
 import {NodeKit} from '@gravity-ui/nodekit';
+{{#if hasFrontend}}import express from 'express';{{/if}}
 
 const nodekit = new NodeKit({});
 {{#if hasFrontend}}
@@ -17,7 +20,7 @@ const renderLayout = createRenderFunction([
 
 const app = new ExpressKit(nodekit, {
 {{#if hasFrontend}}
-    'GET *': (_, res) => {
+    'GET /': (_, res) => {
         res.send(
             renderLayout({
                 title: '{{projectName}}',
@@ -31,5 +34,8 @@ const app = new ExpressKit(nodekit, {
     },
 {{/if}}
 });
+{{#if hasFrontend}}
+app.express.use(express.static(path.join('dist', 'public')));
+{{/if}}
 
 app.run();
