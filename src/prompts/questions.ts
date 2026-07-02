@@ -65,8 +65,8 @@ export async function askLanguage(model: ProjectModel): Promise<void> {
         await p.select({
             message: i18n.label_language,
             options: [
-                {value: 'ts', label: 'TypeScript', hint: 'recommended'},
-                {value: 'js', label: 'JavaScript'},
+                {value: 'ts', label: i18n['label_language-ts'], hint: 'recommended'},
+                {value: 'js', label: i18n['label_language-js']},
             ],
             initialValue: 'ts',
         }),

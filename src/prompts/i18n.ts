@@ -4,6 +4,8 @@ export const i18n = {
     'label_registry-question': 'Use custom npm registry?',
     label_registry: 'Registry URL',
     label_language: 'Language',
+    'label_language-ts': 'TypeScript',
+    'label_language-js': 'JavaScript',
     'label_has-frontend': 'Does your project have a frontend?',
     'label_has-styles': 'Will your project have styles?',
     'label_has-react': 'Will your project use React?',
