@@ -17,14 +17,14 @@ export default defineConfig(
             }
         }
     },
-    {{~#if hasTypescript }}typescriptConfig,{{/if}}
-    {{#if hasBackend~}}
+    {{#if hasTypescript }}typescriptConfig,{{/if}}
+    {{#if hasBackend}}
     {
         files: ['./src/server/**/*'],
         extends: [serverConfig],
     },
     {{/if}}
-    {{#if hasReact~}}
+    {{#if hasReact}}
     {
         files: ['./src/ui/**/*'],
         extends: [clientConfig],
