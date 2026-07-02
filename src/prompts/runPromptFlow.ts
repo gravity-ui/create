@@ -2,7 +2,7 @@ import {styleText} from 'node:util';
 
 import {log} from '@clack/prompts';
 
-import type {ParsedCli} from '../cli/schema.js';
+import {type ParsedCli, YES_DEFAULTS} from '../cli/schema.js';
 import type {ProjectModel} from '../model/index.js';
 
 import {i18n} from './i18n.js';
@@ -60,7 +60,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.language = cli.language;
     } else if (cli.yes) {
-        const value = 'ts';
+        const value = YES_DEFAULTS.language;
         skippedStep(i18n.label_language, value);
 
         model.language = value;
@@ -74,7 +74,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.hasFrontend = cli.frontend;
     } else if (cli.yes) {
-        const value = true;
+        const value = YES_DEFAULTS.frontend;
         skippedStep(i18n['label_has-frontend'], yesNo(value));
 
         model.hasFrontend = value;
@@ -89,7 +89,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
             model.hasStyles = cli.styles;
         } else if (cli.yes) {
-            const value = true;
+            const value = YES_DEFAULTS.styles;
             skippedStep(i18n['label_has-styles'], yesNo(value));
 
             model.hasStyles = value;
@@ -103,7 +103,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
             model.hasReact = cli.react;
         } else if (cli.yes) {
-            const value = true;
+            const value = YES_DEFAULTS.react;
             skippedStep(i18n['label_has-react'], yesNo(value));
 
             model.hasReact = value;
@@ -118,7 +118,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
 
         model.hasBackend = cli.backend;
     } else if (cli.yes) {
-        const value = false;
+        const value = YES_DEFAULTS.backend;
         skippedStep(i18n['label_has-backend'], yesNo(value));
 
         model.hasBackend = value;

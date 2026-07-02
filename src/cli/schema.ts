@@ -170,3 +170,15 @@ export const CliSchema = z
     });
 
 export type ParsedCli = z.infer<typeof CliSchema>;
+
+/**
+ * Defaults applied when --yes is passed and a flag was not given explicitly.
+ * `satisfies` ties this to ParsedCli's shape so it can't drift from CliSchema.
+ */
+export const YES_DEFAULTS = {
+    language: 'ts',
+    frontend: true,
+    styles: true,
+    react: true,
+    backend: false,
+} satisfies Pick<ParsedCli, 'language' | 'frontend' | 'styles' | 'react' | 'backend'>;
