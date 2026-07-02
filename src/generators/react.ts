@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
 import {addDep, addDevDep} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
@@ -39,6 +40,10 @@ export async function generateReact(model: ProjectModel, fs: FileSystem): Promis
         isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
     );
 
-    const entryFile = path.join(uiDir, 'entries', `${model.projectName}-app.${jsxExt}`);
+    const entryFile = path.join(
+        uiDir,
+        'entries',
+        `${getDefaultEntryFileName(model.projectName)}.${jsxExt}`,
+    );
     await fs.writeFile(entryFile, isTs ? renderEntryTsx({}) : renderEntryJsx({}));
 }

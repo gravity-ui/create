@@ -15,6 +15,7 @@ export async function generateLinters(model: ProjectModel, fs: FileSystem): Prom
     addDevDep(model, 'prettier', '^3.0.0');
     addDevDep(model, '@gravity-ui/eslint-config', '^4.0.0');
     addDevDep(model, '@gravity-ui/prettier-config', '^1.0.0');
+    addDevDep(model, 'globals', '^17.0.0');
 
     addScript(model, 'lint', 'eslint . --ext .js,.jsx,.ts,.tsx');
     addScript(model, 'prettier', 'prettier --list-different .');
@@ -22,11 +23,15 @@ export async function generateLinters(model: ProjectModel, fs: FileSystem): Prom
     await fs.writeFile(
         path.join(model.destination, `eslint.config.${isModule ? 'js' : 'mjs'}`),
         renderEslintConfig({
+            isModule,
             hasTypescript: model.language === 'ts',
             hasReact: model.hasReact,
             hasBackend: model.hasBackend,
         }),
     );
 
-    await fs.writeFile(path.join(model.destination, '.prettierrc.js'), renderPrettierrc({}));
+    await fs.writeFile(
+        path.join(model.destination, `.prettierrc.${isModule ? 'cjs' : 'js'}`),
+        renderPrettierrc({}),
+    );
 }

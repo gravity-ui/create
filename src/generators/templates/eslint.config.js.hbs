@@ -4,10 +4,19 @@ import importOrderConfig from '@gravity-ui/eslint-config/import-order';
 {{#if hasBackend}}import serverConfig from '@gravity-ui/eslint-config/server';{{/if}}
 {{#if hasTypescript }}import typescriptConfig from '@gravity-ui/eslint-config/typescript';{{/if}}
 import {defineConfig} from 'eslint/config';
+import globals from 'globals';
 
 export default defineConfig(
     baseConfig,
     importOrderConfig,
+    {
+        files: ['.prettierrc.{{#if isModule}}cjs{{else}}js{{/if}}'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            }
+        }
+    },
     {{~#if hasTypescript }}typescriptConfig,{{/if}}
     {{#if hasBackend~}}
     {

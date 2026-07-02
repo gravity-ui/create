@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
 import {addDep} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
@@ -25,6 +26,10 @@ export async function generateNodekit(model: ProjectModel, fs: FileSystem): Prom
 
     await fs.writeFile(
         serverFile,
-        render({hasFrontend: model.hasFrontend, projectName: model.projectName}),
+        render({
+            hasFrontend: model.hasFrontend,
+            projectName: model.projectName,
+            entryFileName: getDefaultEntryFileName(model.projectName),
+        }),
     );
 }
