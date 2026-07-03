@@ -1,8 +1,14 @@
 import baseConfig from '@gravity-ui/eslint-config/base';
-{{#if hasReact}}import clientConfig from '@gravity-ui/eslint-config/client';{{/if}}
+{{#if hasReact}}
+import clientConfig from '@gravity-ui/eslint-config/client';
+{{/if}}
 import importOrderConfig from '@gravity-ui/eslint-config/import-order';
-{{#if hasBackend}}import serverConfig from '@gravity-ui/eslint-config/server';{{/if}}
-{{#if hasTypescript }}import typescriptConfig from '@gravity-ui/eslint-config/typescript';{{/if}}
+{{#if hasBackend}}
+import serverConfig from '@gravity-ui/eslint-config/server';
+{{/if}}
+{{#if hasTypescript }}
+import typescriptConfig from '@gravity-ui/eslint-config/typescript';
+{{/if}}
 import {defineConfig} from 'eslint/config';
 import globals from 'globals';
 
@@ -17,7 +23,9 @@ export default defineConfig(
             }
         }
     },
-    {{#if hasTypescript }}typescriptConfig,{{/if}}
+    {{#if hasTypescript }}
+    typescriptConfig,
+    {{/if}}
     {{#if hasBackend}}
     {
         files: ['./src/server/**/*'],

@@ -5,7 +5,9 @@ const port = process.env.APP_PORT ? Number(process.env.APP_PORT) : 3030;
 export default () => {
     return {
         client: {
-{{#if hasReact}}            newJsxTransform: true,{{/if}}
+{{#if hasReact}}
+            newJsxTransform: true,
+{{/if}}
 {{#if hasFrontend}}
             devServer: {
                 port: port + 1,
