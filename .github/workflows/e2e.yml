@@ -47,6 +47,9 @@ jobs:
           npm start --silent | tee /tmp/plain-app-output.txt
       - name: Assert CLI output
         run: grep -q "Hello, world!" /tmp/plain-app-output.txt
+      - name: Lint generated package
+        working-directory: /tmp/full-app
+        run: npm run lint
 
   test-e2e-browser:
     needs: build
@@ -68,6 +71,9 @@ jobs:
       - name: Install
         working-directory: /tmp/full-app
         run: npm install
+      - name: Lint generated package
+        working-directory: /tmp/full-app
+        run: npm run lint
       - run: npx playwright install --with-deps chromium
       - name: Run Playwright against the scaffolded app
         run: npx playwright test
