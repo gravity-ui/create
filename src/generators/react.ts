@@ -11,6 +11,7 @@ import renderComponentsIndexJs from './templates/src/ui/components/index.js.hbs.
 import renderComponentsIndexTs from './templates/src/ui/components/index.ts.hbs.js';
 import renderEntryJsx from './templates/src/ui/entries/entry.jsx.hbs.js';
 import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
+import renderAssetsTypes from './templates/src/ui/types/assets.d.ts.hbs.js';
 
 export async function generateReact(model: ProjectModel, fs: FileSystem): Promise<void> {
     if (!model.hasReact) {
@@ -46,4 +47,8 @@ export async function generateReact(model: ProjectModel, fs: FileSystem): Promis
         `${getDefaultEntryFileName(model.projectName)}.${jsxExt}`,
     );
     await fs.writeFile(entryFile, isTs ? renderEntryTsx({}) : renderEntryJsx({}));
+
+    if (isTs) {
+        await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
+    }
 }
