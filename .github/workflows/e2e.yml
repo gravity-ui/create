@@ -37,6 +37,8 @@ jobs:
           name: lib
           path: lib
       - run: node lib/index.js --yes --out /tmp/plain-app --language ts --no-frontend --no-backend
+        env:
+          NO_COLOR: '1'
       - name: Build and run scaffolded plain-ts project
         working-directory: /tmp/plain-app
         run: |
@@ -61,6 +63,8 @@ jobs:
           name: lib
           path: lib
       - run: node lib/index.js --yes --out /tmp/full-app --language ts --frontend --backend --react --styles
+        env:
+          NO_COLOR: '1'
       - name: Install
         working-directory: /tmp/full-app
         run: npm install
