@@ -16,7 +16,7 @@ export async function generateBase(model: ProjectModel, fs: FileSystem): Promise
         name: model.projectName,
         version: '0.0.0',
         private: true,
-        ...(isModule ? {module: true} : {}),
+        ...(isModule ? {type: 'module'} : {}),
         scripts: model.scripts,
         dependencies: model.packages.dependencies,
         devDependencies: model.packages.devDependencies,
