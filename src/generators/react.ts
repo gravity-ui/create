@@ -11,7 +11,7 @@ import renderComponentsIndexJs from './templates/src/ui/components/index.js.hbs.
 import renderComponentsIndexTs from './templates/src/ui/components/index.ts.hbs.js';
 import renderEntryJsx from './templates/src/ui/entries/entry.jsx.hbs.js';
 import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
-import renderAssetsTypes from './templates/src/ui/types/assets.d.ts.hbs.js';
+import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
 export async function generateReact(model: ProjectModel, fs: FileSystem): Promise<void> {
     if (!model.hasReact) {
