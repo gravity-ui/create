@@ -61,11 +61,9 @@ jobs:
           name: lib
           path: lib
       - run: node lib/index.js --yes --out /tmp/full-app --language ts --frontend --backend --react --styles
-      - name: Install and build scaffolded full-app project
+      - name: Install
         working-directory: /tmp/full-app
-        run: |
-          npm install
-          npm run build
+        run: npm install
       - run: npx playwright install --with-deps chromium
       - name: Run Playwright against the scaffolded app
         run: npx playwright test
