@@ -18,7 +18,6 @@ export async function generateNodekit(model: ProjectModel, fs: FileSystem): Prom
 
     if (model.hasFrontend) {
         addDep(model, '@gravity-ui/app-layout', '^2.0.0');
-        addDep(model, 'express', '^4.0.0');
     }
 
     const isTs = model.language === 'ts';

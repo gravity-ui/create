@@ -1,9 +1,24 @@
 import type {ServiceConfig} from '@gravity-ui/app-builder';
+{{#if hasFrontend}}
+const port = process.env.APP_PORT ? Number(process.env.APP_PORT) : 3030;
+{{/if}}
 
 export default (): ServiceConfig => {
     return {
         client: {
-            newJsxTransform: true,
+{{#if hasReact}}            newJsxTransform: true,{{/if}}
+{{#if hasFrontend}}
+            devServer: {
+                port: port + 1,
+            },
+{{/if}}
         },
+{{#if hasBackend}}
+        server: {
+{{#if hasFrontend}}
+            port,
+{{/if}}
+        },
+{{/if}}
     };
 };
