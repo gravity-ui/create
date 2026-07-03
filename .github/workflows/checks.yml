@@ -14,10 +14,12 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - uses: actions/cache@v4
+        id: cache
         with:
           path: node_modules
           key: node_modules-${{ hashFiles('package-lock.json') }}
-      - run: npm ci
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
   lint:
     needs: install
