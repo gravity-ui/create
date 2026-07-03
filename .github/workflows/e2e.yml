@@ -48,7 +48,7 @@ jobs:
       - name: Assert CLI output
         run: grep -q "Hello, world!" /tmp/plain-app-output.txt
       - name: Lint generated package
-        working-directory: /tmp/full-app
+        working-directory: /tmp/plain-app
         run: npm run lint
 
   test-e2e-browser:
