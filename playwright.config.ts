@@ -15,7 +15,7 @@ export default defineConfig({
         baseURL,
     },
     webServer: {
-        command: 'npm start',
+        command: 'npm run dev',
         cwd: appDir,
         url: baseURL,
         env: {APP_PORT: port},
