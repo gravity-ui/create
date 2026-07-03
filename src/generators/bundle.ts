@@ -13,24 +13,38 @@ export async function generateBundling(model: ProjectModel, fs: FileSystem) {
     const hasAppBuilder = model.hasBackend || model.hasFrontend;
 
     if (hasAppBuilder) {
-        addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
-        addScript(model, 'start', 'node dist/server/index.js');
-        addScript(model, 'dev', 'app-builder dev');
-        addScript(model, 'build', 'NODE_ENV=production app-builder build');
+        let target = '';
 
-        if (model.hasReact) {
-            if (model.language === 'ts') {
-                await fs.writeFile(
-                    path.join(model.destination, 'app-builder.config.ts'),
-                    renderAppBuilderConfigTs({}),
-                );
-            } else {
-                await fs.writeFile(
-                    path.join(model.destination, 'app-builder.config.js'),
-                    renderAppBuilderConfigJs({}),
-                );
-            }
+        if (model.hasBackend && !model.hasFrontend) {
+            target = ' --target server';
+        } else if (model.hasFrontend && !model.hasBackend) {
+            target = ' --target client';
         }
+
+        addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
+
+        if (model.hasBackend) {
+            addScript(model, 'start', 'node dist/server/index.js');
+        }
+
+        addScript(model, 'dev', `app-builder dev${target}`);
+        addScript(model, 'build', `NODE_ENV=production app-builder build${target}`);
+
+        const appBuilderConfigOptions = {
+            hasReact: model.hasReact,
+            hasFrontend: model.hasFrontend,
+            hasBackend: model.hasBackend,
+        };
+
+        await fs.writeFile(
+            path.join(
+                model.destination,
+                `app-builder.config.${model.language === 'ts' ? 'ts' : 'js'}`,
+            ),
+            model.language === 'ts'
+                ? renderAppBuilderConfigTs(appBuilderConfigOptions)
+                : renderAppBuilderConfigJs(appBuilderConfigOptions),
+        );
     } else if (model.language === 'ts') {
         addScript(model, 'start', 'node dist/index.js');
         addScript(model, 'dev', 'tsc --watch');
