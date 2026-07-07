@@ -90,5 +90,42 @@ createRoot(document.getElementById('root')).render(<App />);
         t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
         t.assert.equal(file('/project/src/ui/components/index.ts'), null);
         t.assert.equal(file('/project/src/ui/entries/my-app-app.tsx'), null);
+
+        const entry = file('/project/src/ui/entries/my-app-app.ts');
+        t.assert.ok(entry);
+        t.assert.equal(
+            entry.content,
+            `const header = document.createElement('h1');
+
+header.innerText = 'Hello, world!';
+
+document.querySelector<HTMLDivElement>('root')?.append(header);
+`,
+        );
+    });
+
+    test('frontend without react, JS project writes plain js entry', async (t: TestContext) => {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'js',
+            hasFrontend: true,
+        });
+
+        t.assert.equal(file('/project/src/ui/components/App/App.jsx'), null);
+        t.assert.equal(file('/project/src/ui/components/index.js'), null);
+        t.assert.equal(file('/project/src/ui/entries/my-app-app.jsx'), null);
+
+        const entry = file('/project/src/ui/entries/my-app-app.js');
+        t.assert.ok(entry);
+        t.assert.equal(
+            entry.content,
+            `const header = document.createElement('h1');
+
+header.innerText = 'Hello, world!';
+
+document.querySelector('root')?.append(header);
+`,
+        );
     });
 });
