@@ -11,7 +11,9 @@ import renderAppJsx from './templates/src/ui/components/App/App.jsx.hbs.js';
 import renderAppTsx from './templates/src/ui/components/App/App.tsx.hbs.js';
 import renderComponentsIndexJs from './templates/src/ui/components/index.js.hbs.js';
 import renderComponentsIndexTs from './templates/src/ui/components/index.ts.hbs.js';
+import renderEntryJs from './templates/src/ui/entries/entry.js.hbs.js';
 import renderEntryJsx from './templates/src/ui/entries/entry.jsx.hbs.js';
+import renderEntryTs from './templates/src/ui/entries/entry.ts.hbs.js';
 import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
 import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
@@ -88,8 +90,12 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
         'entries',
         `${getDefaultEntryFileName(model.projectName)}.${model.hasReact ? jsxExt : fileExt}`,
     );
-    await fs.writeFile(
-        entryFile,
-        isTs ? renderEntryTsx(entryFileOptions) : renderEntryJsx(entryFileOptions),
-    );
+
+    let template = isTs ? renderEntryTs(entryFileOptions) : renderEntryJs(entryFileOptions);
+
+    if (model.hasReact) {
+        template = isTs ? renderEntryTsx(entryFileOptions) : renderEntryJsx(entryFileOptions);
+    }
+
+    await fs.writeFile(entryFile, template);
 }
