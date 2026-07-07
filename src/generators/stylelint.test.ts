@@ -9,7 +9,7 @@ test.describe('stylelint generator', () => {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasStyles: true,
+            frontend: ['styles'],
         });
 
         const config = file('/project/.stylelintrc.json');

@@ -9,8 +9,7 @@ test.describe('app-builder generator', () => {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
-            hasReact: true,
+            frontend: ['react'],
         });
 
         const app = file('/project/src/ui/components/App/App.tsx');
@@ -56,8 +55,7 @@ createRoot(document.getElementById('root')!).render(<App />);
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
-            hasFrontend: true,
-            hasReact: true,
+            frontend: ['react'],
         });
 
         t.assert.ok(file('/project/src/ui/components/App/App.jsx'));
@@ -84,7 +82,7 @@ createRoot(document.getElementById('root')).render(<App />);
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
+            frontend: [],
         });
 
         t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
@@ -109,7 +107,7 @@ document.querySelector<HTMLDivElement>('root')?.append(header);
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
-            hasFrontend: true,
+            frontend: [],
         });
 
         t.assert.equal(file('/project/src/ui/components/App/App.jsx'), null);
@@ -168,7 +166,7 @@ document.querySelector('root')?.append(header);
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
+            frontend: [],
             hasBackend: true,
         });
 
@@ -184,8 +182,7 @@ document.querySelector('root')?.append(header);
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
-            hasReact: true,
+            frontend: ['react'],
             hasBackend: true,
         });
 
@@ -198,7 +195,7 @@ document.querySelector('root')?.append(header);
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
-            hasFrontend: true,
+            frontend: [],
         });
         t.assert.ok(jsConfig.file('/project/app-builder.config.js'));
         t.assert.equal(jsConfig.file('/project/app-builder.config.ts'), null);

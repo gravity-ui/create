@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {frontendFlags} from '../utils/frontendFlags.js';
 import {writeJson} from '../utils/fs.js';
 import {addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
@@ -10,10 +11,12 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
         return;
     }
 
+    const {hasFrontend, hasReact} = frontendFlags(model);
+
     addDevDep(model, 'typescript', '^5.3.0');
     addDevDep(model, '@gravity-ui/tsconfig', '^1.0.0');
 
-    if (!model.hasFrontend && !model.hasBackend) {
+    if (!hasFrontend && !model.hasBackend) {
         addScript(model, 'typecheck', 'tsc --noEmit');
 
         const tsconfig: Record<string, unknown> = {
@@ -46,7 +49,7 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
 
     const references: Array<{path: string}> = [];
 
-    if (model.hasFrontend) {
+    if (hasFrontend) {
         const uiTsconfig: Record<string, unknown> = {
             extends: '@gravity-ui/tsconfig/tsconfig.json',
             compilerOptions: {
@@ -57,7 +60,7 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
             include: ['**/*'],
         };
 
-        if (model.hasReact) {
+        if (hasReact) {
             (uiTsconfig.compilerOptions as Record<string, unknown>).jsx = 'react-jsx';
         }
 

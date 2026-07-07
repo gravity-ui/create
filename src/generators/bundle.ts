@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {frontendFlags} from '../utils/frontendFlags.js';
 import {addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
@@ -8,7 +9,7 @@ import renderIndexJs from './templates/index.js.hbs.js';
 import renderSrcIndexTs from './templates/src/index.ts.hbs.js';
 
 export async function generateBundling(model: ProjectModel, fs: FileSystem) {
-    const hasAppBuilder = model.hasBackend || model.hasFrontend;
+    const hasAppBuilder = model.hasBackend || frontendFlags(model).hasFrontend;
 
     if (hasAppBuilder) {
         return;

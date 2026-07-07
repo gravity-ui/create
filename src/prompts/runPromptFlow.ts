@@ -3,7 +3,7 @@ import {styleText} from 'node:util';
 import {log} from '@clack/prompts';
 
 import {type ParsedCli, YES_DEFAULTS} from '../cli/schema.js';
-import type {ProjectModel} from '../model/index.js';
+import type {FrontendFeature, ProjectModel} from '../model/index.js';
 
 import {i18n} from './i18n.js';
 import {
@@ -48,6 +48,20 @@ function languageFormat(value: 'js' | 'ts'): string {
 function setModelValue<T extends keyof ProjectModel>(model: ProjectModel, key: T) {
     return (value: ProjectModel[T]) => {
         model[key] = value;
+    };
+}
+
+function setFrontendEnabled(model: ProjectModel) {
+    return (enabled: boolean) => {
+        model.frontend = enabled ? [] : false;
+    };
+}
+
+function addFrontendFeature(frontend: FrontendFeature[], feature: FrontendFeature) {
+    return (enabled: boolean) => {
+        if (enabled) {
+            frontend.push(feature);
+        }
     };
 }
 
@@ -97,19 +111,21 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
         yesDefault: YES_DEFAULTS.frontend,
         label: i18n['label_has-frontend'],
         format: yesNo,
-        set: setModelValue(model, 'hasFrontend'),
-        ask: () => askFrontend(model),
+        set: setFrontendEnabled(model),
+        ask: async () => setFrontendEnabled(model)(await askFrontend()),
     });
 
-    if (model.hasFrontend) {
+    if (model.frontend) {
+        const frontend: FrontendFeature[] = model.frontend;
+
         // Styles
         await resolveStep(cli.yes, {
             cli: cli.styles,
             yesDefault: YES_DEFAULTS.styles,
             label: i18n['label_has-styles'],
             format: yesNo,
-            set: setModelValue(model, 'hasStyles'),
-            ask: () => askStyles(model),
+            set: addFrontendFeature(frontend, 'styles'),
+            ask: async () => addFrontendFeature(frontend, 'styles')(await askStyles()),
         });
 
         // React
@@ -118,8 +134,8 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
             yesDefault: YES_DEFAULTS.react,
             label: i18n['label_has-react'],
             format: yesNo,
-            set: setModelValue(model, 'hasReact'),
-            ask: () => askReact(model),
+            set: addFrontendFeature(frontend, 'react'),
+            ask: async () => addFrontendFeature(frontend, 'react')(await askReact()),
         });
     }
 

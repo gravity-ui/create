@@ -1,12 +1,13 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {frontendFlags} from '../utils/frontendFlags.js';
 import {writeJson} from '../utils/fs.js';
 import {addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
 export async function generateStylelint(model: ProjectModel, fs: FileSystem): Promise<void> {
-    if (!model.hasStyles) {
+    if (!frontendFlags(model).hasStyles) {
         return;
     }
 

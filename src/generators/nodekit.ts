@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {frontendFlags} from '../utils/frontendFlags.js';
 import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
 import {addDep} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
@@ -13,10 +14,12 @@ export async function generateNodekit(model: ProjectModel, fs: FileSystem): Prom
         return;
     }
 
+    const {hasFrontend} = frontendFlags(model);
+
     addDep(model, '@gravity-ui/nodekit', '^2.0.0');
     addDep(model, '@gravity-ui/expresskit', '^3.0.0');
 
-    if (model.hasFrontend) {
+    if (hasFrontend) {
         addDep(model, '@gravity-ui/app-layout', '^2.0.0');
     }
 
@@ -27,7 +30,7 @@ export async function generateNodekit(model: ProjectModel, fs: FileSystem): Prom
     await fs.writeFile(
         serverFile,
         render({
-            hasFrontend: model.hasFrontend,
+            hasFrontend,
             projectName: model.projectName,
             entryFileName: getDefaultEntryFileName(model.projectName),
         }),

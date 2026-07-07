@@ -25,8 +25,7 @@ test.describe('runGenerators', () => {
         model.destination = '/project';
         model.projectName = 'my-app';
         model.language = 'ts';
-        model.hasFrontend = true;
-        model.hasReact = true;
+        model.frontend = ['react'];
         model.hasBackend = true;
 
         const result = await runGenerators(model, {dryRun: true});
@@ -42,7 +41,7 @@ test.describe('runGenerators', () => {
         model.destination = '/project';
         model.projectName = 'my-app';
         model.language = 'ts';
-        model.hasStyles = true;
+        model.frontend = ['styles'];
 
         const result = await runGenerators(model, {dryRun: true});
         const {file} = filesOf(result);
@@ -74,8 +73,7 @@ test.describe('runGenerators', () => {
         model.destination = '/project';
         model.projectName = 'my-app';
         model.language = 'ts';
-        model.hasFrontend = true;
-        model.hasReact = true;
+        model.frontend = ['react'];
 
         const result = await runGenerators(model, {dryRun: true});
         const {file} = filesOf(result);
@@ -95,8 +93,7 @@ test.describe('runGenerators', () => {
         model.destination = '/project';
         model.projectName = 'my-app';
         model.language = 'js';
-        model.hasFrontend = true;
-        model.hasReact = true;
+        model.frontend = ['react'];
 
         const result = await runGenerators(model, {dryRun: true});
         const {file} = filesOf(result);
@@ -114,7 +111,7 @@ test.describe('runGenerators', () => {
         model.destination = '/project';
         model.projectName = 'my-app';
         model.language = 'ts';
-        model.hasFrontend = true;
+        model.frontend = [];
 
         const result = await runGenerators(model, {dryRun: true});
         const {file} = filesOf(result);

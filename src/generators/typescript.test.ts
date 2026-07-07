@@ -25,8 +25,7 @@ test.describe('typescript generator', () => {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
-            hasReact: true,
+            frontend: ['react'],
             hasBackend: true,
         });
 
@@ -52,7 +51,7 @@ test.describe('typescript generator', () => {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
+            frontend: [],
         });
 
         const root = file('/project/tsconfig.json');

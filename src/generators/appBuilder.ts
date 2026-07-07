@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
+import {frontendFlags} from '../utils/frontendFlags.js';
 import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
 import {addDep, addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
@@ -18,7 +19,8 @@ import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
 import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
 export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): Promise<void> {
-    const hasAppBuilder = model.hasBackend || model.hasFrontend;
+    const {hasFrontend, hasReact} = frontendFlags(model);
+    const hasAppBuilder = model.hasBackend || hasFrontend;
 
     if (!hasAppBuilder) {
         return;
@@ -26,9 +28,9 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
 
     let target = '';
 
-    if (model.hasBackend && !model.hasFrontend) {
+    if (model.hasBackend && !hasFrontend) {
         target = ' --target server';
-    } else if (model.hasFrontend && !model.hasBackend) {
+    } else if (hasFrontend && !model.hasBackend) {
         target = ' --target client';
     }
 
@@ -42,8 +44,8 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
     addScript(model, 'build', `NODE_ENV=production app-builder build${target}`);
 
     const appBuilderConfigOptions = {
-        hasReact: model.hasReact,
-        hasFrontend: model.hasFrontend,
+        hasReact,
+        hasFrontend,
         hasBackend: model.hasBackend,
     };
 
@@ -57,12 +59,12 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
     const isTs = model.language === 'ts';
     const uiDir = path.join(model.destination, 'src', 'ui');
 
-    if (model.hasReact) {
+    if (hasReact) {
         await writeReactFiles(model, fs, uiDir, isTs);
     }
 
-    if (model.hasFrontend) {
-        await writeEntryFile(model, fs, uiDir, isTs);
+    if (hasFrontend) {
+        await writeEntryFile(model, fs, uiDir, isTs, hasReact);
     }
 }
 
@@ -103,19 +105,20 @@ async function writeEntryFile(
     fs: FileSystem,
     uiDir: string,
     isTs: boolean,
+    hasReact: boolean,
 ): Promise<void> {
     const jsxExt = isTs ? 'tsx' : 'jsx';
     const fileExt = isTs ? 'ts' : 'js';
-    const entryFileOptions = {hasReact: model.hasReact};
+    const entryFileOptions = {hasReact};
     const entryFile = path.join(
         uiDir,
         'entries',
-        `${getDefaultEntryFileName(model.projectName)}.${model.hasReact ? jsxExt : fileExt}`,
+        `${getDefaultEntryFileName(model.projectName)}.${hasReact ? jsxExt : fileExt}`,
     );
 
     let template = isTs ? renderEntryTs(entryFileOptions) : renderEntryJs(entryFileOptions);
 
-    if (model.hasReact) {
+    if (hasReact) {
         template = isTs ? renderEntryTsx(entryFileOptions) : renderEntryJsx(entryFileOptions);
     }
 

@@ -1,2 +1,2 @@
 export {createEmptyModel} from './createEmptyModel.js';
-export type {ProjectModel} from './types.js';
+export type {FrontendFeature, ProjectModel} from './types.js';

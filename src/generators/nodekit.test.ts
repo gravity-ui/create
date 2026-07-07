@@ -33,7 +33,7 @@ test.describe('nodekit generator', () => {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
-            hasFrontend: true,
+            frontend: [],
             hasBackend: true,
         });
 

@@ -1,5 +1,7 @@
 type Language = 'ts' | 'js';
 
+export type FrontendFeature = 'styles' | 'react';
+
 export interface ProjectModel {
     // Location & registry
     destination: string; // absolute path
@@ -9,10 +11,8 @@ export interface ProjectModel {
     // Language
     language: Language;
 
-    // Frontend
-    hasFrontend: boolean;
-    hasStyles: boolean;
-    hasReact: boolean;
+    // Frontend: false = no frontend, array = frontend with these features
+    frontend: false | FrontendFeature[];
 
     // Backend
     hasBackend: boolean;

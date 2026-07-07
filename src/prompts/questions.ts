@@ -75,7 +75,7 @@ export async function askLanguage(model: ProjectModel): Promise<void> {
     model.language = language as 'ts' | 'js';
 }
 
-export async function askFrontend(model: ProjectModel): Promise<void> {
+export async function askFrontend(): Promise<boolean> {
     const hasFrontend = ensure(
         await p.select({
             message: i18n['label_has-frontend'],
@@ -87,10 +87,10 @@ export async function askFrontend(model: ProjectModel): Promise<void> {
         }),
     );
 
-    model.hasFrontend = hasFrontend as boolean;
+    return hasFrontend as boolean;
 }
 
-export async function askStyles(model: ProjectModel): Promise<void> {
+export async function askStyles(): Promise<boolean> {
     const hasStyles = ensure(
         await p.select({
             message: i18n['label_has-styles'],
@@ -102,10 +102,10 @@ export async function askStyles(model: ProjectModel): Promise<void> {
         }),
     );
 
-    model.hasStyles = hasStyles as boolean;
+    return hasStyles as boolean;
 }
 
-export async function askReact(model: ProjectModel): Promise<void> {
+export async function askReact(): Promise<boolean> {
     const hasReact = ensure(
         await p.select({
             message: i18n['label_has-react'],
@@ -117,7 +117,7 @@ export async function askReact(model: ProjectModel): Promise<void> {
         }),
     );
 
-    model.hasReact = hasReact as boolean;
+    return hasReact as boolean;
 }
 
 export async function askBackend(model: ProjectModel): Promise<void> {
