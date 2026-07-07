@@ -3,6 +3,7 @@ import path from 'node:path';
 import type {ProjectModel} from '../model/index.js';
 import {writeJson} from '../utils/fs.js';
 import {isModulePackage} from '../utils/isModulePackage.js';
+import {isDefaultRegistry} from '../utils/registry.js';
 import type {FileSystem} from '../utils/types.js';
 
 import renderGitignore from './templates/.gitignore.hbs.js';
@@ -31,7 +32,7 @@ export async function generateBase(model: ProjectModel, fs: FileSystem): Promise
         renderReadme({projectName: model.projectName}),
     );
 
-    if (model.registry) {
+    if (model.registry && !isDefaultRegistry(model.registry)) {
         await fs.writeFile(
             path.join(model.destination, '.npmrc'),
             renderNpmrc({registry: model.registry}),

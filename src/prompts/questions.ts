@@ -3,6 +3,7 @@ import path from 'node:path';
 import * as p from '@clack/prompts';
 
 import type {ProjectModel} from '../model/index.js';
+import {DEFAULT_NPM_REGISTRY} from '../utils/constants.js';
 import {validateDestination} from '../utils/destination.js';
 
 import {i18n} from './i18n.js';
@@ -46,8 +47,8 @@ export async function askRegistry(model: ProjectModel): Promise<void> {
     const registry = ensure(
         await p.text({
             message: i18n.label_registry,
-            placeholder: 'https://registry.npmjs.org/',
-            defaultValue: 'https://registry.npmjs.org/',
+            placeholder: DEFAULT_NPM_REGISTRY,
+            defaultValue: DEFAULT_NPM_REGISTRY,
         }),
     );
 
