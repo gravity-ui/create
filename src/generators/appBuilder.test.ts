@@ -128,4 +128,79 @@ document.querySelector('root')?.append(header);
 `,
         );
     });
+
+    test('no frontend and no backend writes no app-builder files', async (t: TestContext) => {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'ts',
+        });
+
+        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
+        t.assert.equal(file('/project/src/ui/components/index.ts'), null);
+        t.assert.equal(file('/project/src/ui/entries/my-app-app.ts'), null);
+        t.assert.equal(file('/project/src/ui/entries/my-app-app.tsx'), null);
+    });
+
+    test('backend-only project uses server target and writes no ui entry', async (t: TestContext) => {
+        const {file, model} = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'ts',
+            hasBackend: true,
+        });
+
+        t.assert.equal(model.scripts.dev, 'app-builder dev --target server');
+        t.assert.equal(
+            model.scripts.build,
+            'NODE_ENV=production app-builder build --target server',
+        );
+        t.assert.equal(model.scripts.start, 'node dist/server/index.js');
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/app-builder'], '^0.48.0');
+
+        t.assert.ok(file('/project/app-builder.config.ts'));
+        t.assert.equal(file('/project/src/ui/entries/my-app-app.ts'), null);
+        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
+    });
+
+    test('frontend + backend project uses no target flag', async (t: TestContext) => {
+        const {file, model} = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'ts',
+            hasFrontend: true,
+            hasBackend: true,
+        });
+
+        t.assert.equal(model.scripts.dev, 'app-builder dev');
+        t.assert.equal(model.scripts.build, 'NODE_ENV=production app-builder build');
+        t.assert.equal(model.scripts.start, 'node dist/server/index.js');
+
+        t.assert.ok(file('/project/src/ui/entries/my-app-app.ts'));
+    });
+
+    test('app-builder.config content reflects hasReact/hasFrontend/hasBackend', async (t: TestContext) => {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'ts',
+            hasFrontend: true,
+            hasReact: true,
+            hasBackend: true,
+        });
+
+        const config = file('/project/app-builder.config.ts');
+        t.assert.ok(config);
+        t.assert.match(config.content, /newJsxTransform: true/);
+        t.assert.match(config.content, /server: {/);
+
+        const jsConfig = await setupGeneratorTest(generateAppBuilder, {
+            destination: '/project',
+            projectName: 'my-app',
+            language: 'js',
+            hasFrontend: true,
+        });
+        t.assert.ok(jsConfig.file('/project/app-builder.config.js'));
+        t.assert.equal(jsConfig.file('/project/app-builder.config.ts'), null);
+    });
 });

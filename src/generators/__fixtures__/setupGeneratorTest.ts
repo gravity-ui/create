@@ -18,5 +18,6 @@ export async function setupGeneratorTest(
 
     return {
         file,
+        model: finalModel,
     };
 }

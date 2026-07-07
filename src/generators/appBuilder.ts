@@ -21,69 +21,91 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
     const hasAppBuilder = model.hasBackend || model.hasFrontend;
 
     if (!hasAppBuilder) {
-        let target = '';
-
-        if (model.hasBackend && !model.hasFrontend) {
-            target = ' --target server';
-        } else if (model.hasFrontend && !model.hasBackend) {
-            target = ' --target client';
-        }
-
-        addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
-
-        if (model.hasBackend) {
-            addScript(model, 'start', 'node dist/server/index.js');
-        }
-
-        addScript(model, 'dev', `app-builder dev${target}`);
-        addScript(model, 'build', `NODE_ENV=production app-builder build${target}`);
-
-        const appBuilderConfigOptions = {
-            hasReact: model.hasReact,
-            hasFrontend: model.hasFrontend,
-            hasBackend: model.hasBackend,
-        };
-
-        await fs.writeFile(
-            path.join(
-                model.destination,
-                `app-builder.config.${model.language === 'ts' ? 'ts' : 'js'}`,
-            ),
-            model.language === 'ts'
-                ? renderAppBuilderConfigTs(appBuilderConfigOptions)
-                : renderAppBuilderConfigJs(appBuilderConfigOptions),
-        );
+        return;
     }
 
+    let target = '';
+
+    if (model.hasBackend && !model.hasFrontend) {
+        target = ' --target server';
+    } else if (model.hasFrontend && !model.hasBackend) {
+        target = ' --target client';
+    }
+
+    addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
+
+    if (model.hasBackend) {
+        addScript(model, 'start', 'node dist/server/index.js');
+    }
+
+    addScript(model, 'dev', `app-builder dev${target}`);
+    addScript(model, 'build', `NODE_ENV=production app-builder build${target}`);
+
+    const appBuilderConfigOptions = {
+        hasReact: model.hasReact,
+        hasFrontend: model.hasFrontend,
+        hasBackend: model.hasBackend,
+    };
+
+    await fs.writeFile(
+        path.join(model.destination, `app-builder.config.${model.language === 'ts' ? 'ts' : 'js'}`),
+        model.language === 'ts'
+            ? renderAppBuilderConfigTs(appBuilderConfigOptions)
+            : renderAppBuilderConfigJs(appBuilderConfigOptions),
+    );
+
     const isTs = model.language === 'ts';
-    const jsxExt = isTs ? 'tsx' : 'jsx';
-    const fileExt = isTs ? 'ts' : 'js';
     const uiDir = path.join(model.destination, 'src', 'ui');
 
     if (model.hasReact) {
-        addDep(model, 'react', '^18.0.0');
-        addDep(model, 'react-dom', '^18.0.0');
-        addDep(model, '@gravity-ui/uikit', '^7.0.0');
-
-        if (model.language === 'ts') {
-            addDevDep(model, '@types/react', '^18.0.0');
-            addDevDep(model, '@types/react-dom', '^18.0.0');
-        }
-
-        const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
-        await fs.writeFile(appFile, isTs ? renderAppTsx({}) : renderAppJsx({}));
-
-        const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
-        await fs.writeFile(
-            barrelFile,
-            isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
-        );
-
-        if (isTs) {
-            await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
-        }
+        await writeReactFiles(model, fs, uiDir, isTs);
     }
 
+    if (model.hasFrontend) {
+        await writeEntryFile(model, fs, uiDir, isTs);
+    }
+}
+
+async function writeReactFiles(
+    model: ProjectModel,
+    fs: FileSystem,
+    uiDir: string,
+    isTs: boolean,
+): Promise<void> {
+    const jsxExt = isTs ? 'tsx' : 'jsx';
+    const fileExt = isTs ? 'ts' : 'js';
+
+    addDep(model, 'react', '^18.0.0');
+    addDep(model, 'react-dom', '^18.0.0');
+    addDep(model, '@gravity-ui/uikit', '^7.0.0');
+
+    if (isTs) {
+        addDevDep(model, '@types/react', '^18.0.0');
+        addDevDep(model, '@types/react-dom', '^18.0.0');
+    }
+
+    const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
+    await fs.writeFile(appFile, isTs ? renderAppTsx({}) : renderAppJsx({}));
+
+    const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
+    await fs.writeFile(
+        barrelFile,
+        isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
+    );
+
+    if (isTs) {
+        await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
+    }
+}
+
+async function writeEntryFile(
+    model: ProjectModel,
+    fs: FileSystem,
+    uiDir: string,
+    isTs: boolean,
+): Promise<void> {
+    const jsxExt = isTs ? 'tsx' : 'jsx';
+    const fileExt = isTs ? 'ts' : 'js';
     const entryFileOptions = {hasReact: model.hasReact};
     const entryFile = path.join(
         uiDir,
