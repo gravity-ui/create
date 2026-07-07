@@ -2,9 +2,11 @@ import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
 import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
-import {addDep, addDevDep} from '../utils/pm.js';
+import {addDep, addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
 
+import renderAppBuilderConfigJs from './templates/app-builder.config.js.hbs.js';
+import renderAppBuilderConfigTs from './templates/app-builder.config.ts.hbs.js';
 import renderAppJsx from './templates/src/ui/components/App/App.jsx.hbs.js';
 import renderAppTsx from './templates/src/ui/components/App/App.tsx.hbs.js';
 import renderComponentsIndexJs from './templates/src/ui/components/index.js.hbs.js';
@@ -14,17 +16,41 @@ import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
 import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
 export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): Promise<void> {
-    if (!model.hasReact) {
-        return;
-    }
+    const hasAppBuilder = model.hasBackend || model.hasFrontend;
 
-    addDep(model, 'react', '^18.0.0');
-    addDep(model, 'react-dom', '^18.0.0');
-    addDep(model, '@gravity-ui/uikit', '^7.0.0');
+    if (!hasAppBuilder) {
+        let target = '';
 
-    if (model.language === 'ts') {
-        addDevDep(model, '@types/react', '^18.0.0');
-        addDevDep(model, '@types/react-dom', '^18.0.0');
+        if (model.hasBackend && !model.hasFrontend) {
+            target = ' --target server';
+        } else if (model.hasFrontend && !model.hasBackend) {
+            target = ' --target client';
+        }
+
+        addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
+
+        if (model.hasBackend) {
+            addScript(model, 'start', 'node dist/server/index.js');
+        }
+
+        addScript(model, 'dev', `app-builder dev${target}`);
+        addScript(model, 'build', `NODE_ENV=production app-builder build${target}`);
+
+        const appBuilderConfigOptions = {
+            hasReact: model.hasReact,
+            hasFrontend: model.hasFrontend,
+            hasBackend: model.hasBackend,
+        };
+
+        await fs.writeFile(
+            path.join(
+                model.destination,
+                `app-builder.config.${model.language === 'ts' ? 'ts' : 'js'}`,
+            ),
+            model.language === 'ts'
+                ? renderAppBuilderConfigTs(appBuilderConfigOptions)
+                : renderAppBuilderConfigJs(appBuilderConfigOptions),
+        );
     }
 
     const isTs = model.language === 'ts';
@@ -32,23 +58,38 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
     const fileExt = isTs ? 'ts' : 'js';
     const uiDir = path.join(model.destination, 'src', 'ui');
 
-    const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
-    await fs.writeFile(appFile, isTs ? renderAppTsx({}) : renderAppJsx({}));
+    if (model.hasReact) {
+        addDep(model, 'react', '^18.0.0');
+        addDep(model, 'react-dom', '^18.0.0');
+        addDep(model, '@gravity-ui/uikit', '^7.0.0');
 
-    const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
-    await fs.writeFile(
-        barrelFile,
-        isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
-    );
+        if (model.language === 'ts') {
+            addDevDep(model, '@types/react', '^18.0.0');
+            addDevDep(model, '@types/react-dom', '^18.0.0');
+        }
 
+        const appFile = path.join(uiDir, 'components', 'App', `App.${jsxExt}`);
+        await fs.writeFile(appFile, isTs ? renderAppTsx({}) : renderAppJsx({}));
+
+        const barrelFile = path.join(uiDir, 'components', `index.${fileExt}`);
+        await fs.writeFile(
+            barrelFile,
+            isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
+        );
+
+        if (isTs) {
+            await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
+        }
+    }
+
+    const entryFileOptions = {hasReact: model.hasReact};
     const entryFile = path.join(
         uiDir,
         'entries',
-        `${getDefaultEntryFileName(model.projectName)}.${jsxExt}`,
+        `${getDefaultEntryFileName(model.projectName)}.${model.hasReact ? jsxExt : fileExt}`,
     );
-    await fs.writeFile(entryFile, isTs ? renderEntryTsx({}) : renderEntryJsx({}));
-
-    if (isTs) {
-        await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
-    }
+    await fs.writeFile(
+        entryFile,
+        isTs ? renderEntryTsx(entryFileOptions) : renderEntryJsx(entryFileOptions),
+    );
 }
