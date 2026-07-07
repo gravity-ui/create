@@ -1,3 +1,4 @@
+import path from 'node:path';
 import {styleText} from 'node:util';
 
 import {log} from '@clack/prompts';
@@ -75,9 +76,6 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
     if (cli.out !== undefined) {
         skippedStep(i18n.label_destination, cli.out);
 
-        model.destination = cli.out;
-        // projectName derived inside askDestination; do the same here
-        const path = await import('node:path');
         model.destination = path.resolve(process.cwd(), cli.out);
         model.projectName = path.basename(model.destination);
     } else if (cli.yes) {

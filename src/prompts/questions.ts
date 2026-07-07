@@ -3,7 +3,7 @@ import path from 'node:path';
 import * as p from '@clack/prompts';
 
 import type {ProjectModel} from '../model/index.js';
-import {isKebabCase} from '../utils/kebabCase.js';
+import {validateDestination} from '../utils/destination.js';
 
 import {i18n} from './i18n.js';
 
@@ -22,13 +22,7 @@ export async function askDestination(model: ProjectModel): Promise<void> {
             placeholder: './my-gravity-app',
             defaultValue: './my-gravity-app',
             validate(value) {
-                if (!value || value.trim().length === 0) {
-                    return 'Folder is required';
-                }
-                if (!isKebabCase(path.basename(value))) {
-                    return 'Destination folder name must be kebab-case';
-                }
-                return undefined;
+                return validateDestination(process.cwd(), value);
             },
         }),
     );

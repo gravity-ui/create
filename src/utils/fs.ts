@@ -1,7 +1,17 @@
+import {existsSync} from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import type {CapturedFile, FileSystem} from './types.js';
+
+/**
+ * Only this file is allowed to touch node:fs directly (see eslint.config.js).
+ * Used by destination validation to refuse to write into a folder that's
+ * already there.
+ */
+export function pathExists(target: string): boolean {
+    return existsSync(target);
+}
 
 /**
  * Writes captured files to the real filesystem in parallel. Generators

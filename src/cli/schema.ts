@@ -1,8 +1,6 @@
-import path from 'node:path';
-
 import {z} from 'zod';
 
-import {isKebabCase} from '../utils/kebabCase.js';
+import {validateDestination} from '../utils/destination.js';
 
 export type FlagGroup = 'project' | 'mode' | 'other';
 
@@ -164,9 +162,14 @@ export const CliSchema = z
         message: '--react requires --frontend',
         path: ['react'],
     })
-    .refine((d) => !d.out || isKebabCase(path.basename(d.out)), {
-        message: 'Destination folder name must be kebab-case',
-        path: ['out'],
+    .superRefine((d, ctx) => {
+        if (d.out === undefined) {
+            return;
+        }
+        const message = validateDestination(process.cwd(), d.out);
+        if (message) {
+            ctx.addIssue({code: 'custom', message, path: ['out']});
+        }
     });
 
 export type ParsedCli = z.infer<typeof CliSchema>;
