@@ -29,7 +29,7 @@ function formatZodError(err: z.ZodError): string {
     return err.issues
         .map((e) => {
             const fieldName = e.path[0]?.toString() ?? 'argument';
-            const prefix = fieldName === 'destination' ? fieldName : `--${fieldName}`;
+            const prefix = fieldName === 'out' ? fieldName : `--${fieldName}`;
             return `${prefix}: ${e.message}`;
         })
         .join('\n');
