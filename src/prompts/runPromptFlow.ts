@@ -81,7 +81,7 @@ export async function runPromptFlow(model: ProjectModel, cli: ParsedCli): Promis
     } else if (cli.yes) {
         throw new Error('Destination is required when --yes is used.');
     } else {
-        await askDestination(model);
+        await askDestination(model, cli['dry-run']);
     }
 
     // Registry

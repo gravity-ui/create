@@ -166,7 +166,7 @@ export const CliSchema = z
         if (d.out === undefined) {
             return;
         }
-        const message = validateDestination(process.cwd(), d.out);
+        const message = validateDestination(process.cwd(), d.out, {allowExisting: d['dry-run']});
         if (message) {
             ctx.addIssue({code: 'custom', message, path: ['out']});
         }

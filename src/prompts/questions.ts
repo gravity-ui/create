@@ -16,14 +16,14 @@ function ensure<T>(value: T | symbol): T {
     return value as T;
 }
 
-export async function askDestination(model: ProjectModel): Promise<void> {
+export async function askDestination(model: ProjectModel, dryRun: boolean): Promise<void> {
     const dest = ensure(
         await p.text({
             message: i18n.label_destination,
             placeholder: './my-gravity-app',
             defaultValue: './my-gravity-app',
             validate(value) {
-                return validateDestination(process.cwd(), value);
+                return validateDestination(process.cwd(), value, {allowExisting: dryRun});
             },
         }),
     );

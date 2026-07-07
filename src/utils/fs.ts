@@ -1,4 +1,4 @@
-import {existsSync} from 'node:fs';
+import {existsSync, realpathSync} from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -11,6 +11,26 @@ import type {CapturedFile, FileSystem} from './types.js';
  */
 export function pathExists(target: string): boolean {
     return existsSync(target);
+}
+
+/**
+ * Resolves symlinks in `target`'s existing ancestor chain, so a symlink
+ * planted inside cwd can't be used to redirect writes outside it. `target`
+ * itself does not need to exist yet (it's the new project folder).
+ */
+export function toRealPath(target: string): string {
+    let existingAncestor = target;
+    while (!existsSync(existingAncestor)) {
+        const parent = path.dirname(existingAncestor);
+        if (parent === existingAncestor) {
+            break;
+        }
+        existingAncestor = parent;
+    }
+
+    const realAncestor = realpathSync(existingAncestor);
+    const remainder = path.relative(existingAncestor, target);
+    return remainder ? path.join(realAncestor, remainder) : realAncestor;
 }
 
 /**

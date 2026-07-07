@@ -19,7 +19,7 @@
     "lint:prettier": "prettier --list-different '**/*.ts'",
     "precompile-templates": "node scripts/precompile-templates.ts",
     "pretest": "npm run precompile-templates",
-    "test": "node --import ./scripts/test-runner-register.js --test",
+    "test": "node --experimental-test-module-mocks --import ./scripts/test-runner-register.js --test",
     "test:e2e": "playwright test",
     "preknip": "npm run precompile-templates",
     "knip": "E2E_APP_DIR=. knip"
@@ -37,6 +37,7 @@
     "@types/node": "^24.13.2",
     "eslint": "^9.39.4",
     "knip": "^6.23.0",
+    "memfs": "^4.63.0",
     "prettier": "^3.9.4",
     "typescript": "^6.0.3"
   },
