@@ -45,7 +45,8 @@ jobs:
         with:
           name: lib
           path: lib
-      - run: node lib/index.js --yes --out /tmp/plain-app --language ts --no-frontend --no-backend
+      - run: node $GITHUB_WORKSPACE/lib/index.js --yes --out plain-app --language ts --no-frontend --no-backend
+        working-directory: /tmp
         env:
           NO_COLOR: '1'
       - name: Build and run scaffolded plain-ts project
@@ -77,7 +78,8 @@ jobs:
         with:
           name: lib
           path: lib
-      - run: node lib/index.js --yes --out /tmp/full-app --language ts --frontend --backend --react --styles
+      - run: node $GITHUB_WORKSPACE/lib/index.js --yes --out full-app --language ts --frontend --backend --react --styles
+        working-directory: /tmp
         env:
           NO_COLOR: '1'
       - name: Install
