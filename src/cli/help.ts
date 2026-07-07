@@ -89,16 +89,16 @@ function renderHelp(): string {
     lines.push(styleText('bold', 'Examples'));
     const examples: Array<[string, string]> = [
         ['npm create @gravity-ui', 'fully interactive'],
-        ['npm create @gravity-ui -- --path my-app', 'specify path'],
+        ['npm create @gravity-ui -- --out my-app', 'specify path'],
         [
-            'npm create @gravity-ui -- --path my-package --language ts --no-frontend --no-backend -y',
+            'npm create @gravity-ui -- --out my-package --language ts --no-frontend --no-backend -y',
             'basic TypeScript package',
         ],
         [
-            'npm create @gravity-ui -- --path my-api --language ts --no-frontend --backend -y',
+            'npm create @gravity-ui -- --out my-api --language ts --no-frontend --backend -y',
             'TypeScript backend service',
         ],
-        ['npm create @gravity-ui -- --path my-app --dry-run', 'preview without writing'],
+        ['npm create @gravity-ui -- --out my-app --dry-run', 'preview without writing'],
     ];
     for (const [cmd, comment] of examples) {
         lines.push(`  ${styleText('dim', '$')} ${cmd}`);
