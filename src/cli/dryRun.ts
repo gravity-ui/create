@@ -5,14 +5,12 @@ import {note} from '@clack/prompts';
 
 import type {CapturedFile} from '../utils/types.js';
 
-const sep = '/';
-
 export function renderDryRunSummary(destination: string, files: readonly CapturedFile[]): void {
     let filesListing = '';
 
     const sorted = [...files].sort((a, b) => {
-        const aParts = a.path.split(sep);
-        const bParts = b.path.split(sep);
+        const aParts = a.path.split(path.sep);
+        const bParts = b.path.split(path.sep);
         const len = Math.min(aParts.length, bParts.length);
 
         for (let i = 0; i < len; i++) {
