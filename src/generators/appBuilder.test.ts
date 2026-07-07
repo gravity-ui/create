@@ -1,11 +1,11 @@
 import test, {type TestContext} from 'node:test';
 
 import {setupGeneratorTest} from './__fixtures__/setupGeneratorTest.js';
-import {generateReact} from './react.js';
+import {generateAppBuilder} from './appBuilder.js';
 
-test.describe('react generator', () => {
+test.describe('app-builder generator', () => {
     test('react + TS project writes app-builder ui layout', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateReact, {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
@@ -52,7 +52,7 @@ createRoot(document.getElementById('root')!).render(<App />);
     });
 
     test('react + JS project uses jsx/js extensions', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateReact, {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
@@ -80,7 +80,7 @@ createRoot(document.getElementById('root')).render(<App />);
     });
 
     test('frontend without react writes no react files', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateReact, {
+        const {file} = await setupGeneratorTest(generateAppBuilder, {
             destination: '/project',
             projectName: 'my-app',
             language: 'ts',
