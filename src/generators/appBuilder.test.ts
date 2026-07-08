@@ -97,7 +97,7 @@ createRoot(document.getElementById('root')).render(<App />);
 
 header.innerText = 'Hello, world!';
 
-document.querySelector<HTMLDivElement>('root')?.append(header);
+document.querySelector<HTMLDivElement>('#root')?.append(header);
 `,
         );
     });
@@ -122,7 +122,7 @@ document.querySelector<HTMLDivElement>('root')?.append(header);
 
 header.innerText = 'Hello, world!';
 
-document.querySelector('root')?.append(header);
+document.querySelector('#root')?.append(header);
 `,
         );
     });
