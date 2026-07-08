@@ -90,7 +90,44 @@ jobs:
         run: npm run lint
       - run: npx playwright install --with-deps chromium
       - name: Run Playwright against the scaffolded app
-        run: npx playwright test
+        run: npx playwright test --grep @frontend-react
         env:
           E2E_APP_DIR: /tmp/full-app
+          APP_PORT: '3000'
+
+  test-e2e-no-react:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [ts, js]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('package-lock.json') }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: lib
+          path: lib
+      - run: node $GITHUB_WORKSPACE/lib/index.js --yes --out no-react-app-${{ matrix.language }} --language ${{ matrix.language }} --frontend --backend --no-react --styles
+        working-directory: /tmp
+        env:
+          NO_COLOR: '1'
+      - name: Install
+        working-directory: /tmp/no-react-app-${{ matrix.language }}
+        run: npm install
+      - name: Lint generated package
+        working-directory: /tmp/no-react-app-${{ matrix.language }}
+        run: npm run lint
+      - run: npx playwright install --with-deps chromium
+      - name: Run Playwright against the scaffolded app
+        run: npx playwright test --grep @frontend-no-react
+        env:
+          E2E_APP_DIR: /tmp/no-react-app-${{ matrix.language }}
           APP_PORT: '3000'
