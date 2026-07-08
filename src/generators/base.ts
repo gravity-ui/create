@@ -10,6 +10,10 @@ import renderGitignore from './templates/.gitignore.hbs.js';
 import renderNpmrc from './templates/.npmrc.hbs.js';
 import renderReadme from './templates/README.md.hbs.js';
 
+function sortKeys(record: Record<string, string>): Record<string, string> {
+    return Object.fromEntries(Object.entries(record).sort(([a], [b]) => a.localeCompare(b)));
+}
+
 export async function generateBase(model: ProjectModel, fs: FileSystem): Promise<void> {
     const isModule = isModulePackage(model);
 
@@ -19,8 +23,8 @@ export async function generateBase(model: ProjectModel, fs: FileSystem): Promise
         private: true,
         ...(isModule ? {type: 'module'} : {}),
         scripts: model.scripts,
-        dependencies: model.packages.dependencies,
-        devDependencies: model.packages.devDependencies,
+        dependencies: sortKeys(model.packages.dependencies),
+        devDependencies: sortKeys(model.packages.devDependencies),
     };
 
     await writeJson(fs, path.join(model.destination, 'package.json'), pkg);

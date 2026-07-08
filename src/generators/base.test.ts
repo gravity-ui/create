@@ -44,4 +44,30 @@ test.describe('base generator', () => {
 
         t.assert.equal(file('/project/.npmrc'), null);
     });
+
+    test('dependencies and devDependencies are sorted alphabetically, not insertion order', async (t: TestContext) => {
+        const {file} = await setupGeneratorTest(generateBase, {
+            destination: '/project',
+            projectName: 'my-app',
+            packages: {
+                dependencies: {
+                    zeta: '1.0.0',
+                    alpha: '1.0.0',
+                    mu: '1.0.0',
+                    '@gravity-ui/uikit': '1.0.0',
+                },
+                devDependencies: {typescript: '1.0.0', eslint: '1.0.0'},
+            },
+        });
+
+        const pkg = file('/project/package.json');
+        t.assert.ok(pkg);
+        t.assert.deepEqual(Object.keys(pkg.content.dependencies), [
+            '@gravity-ui/uikit',
+            'alpha',
+            'mu',
+            'zeta',
+        ]);
+        t.assert.deepEqual(Object.keys(pkg.content.devDependencies), ['eslint', 'typescript']);
+    });
 });
