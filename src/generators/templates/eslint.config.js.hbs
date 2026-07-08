@@ -1,5 +1,5 @@
 import baseConfig from '@gravity-ui/eslint-config/base';
-{{#if hasReact}}
+{{#if hasFrontend}}
 import clientConfig from '@gravity-ui/eslint-config/client';
 {{/if}}
 import importOrderConfig from '@gravity-ui/eslint-config/import-order';
@@ -32,7 +32,7 @@ export default defineConfig(
         extends: [serverConfig],
     },
     {{/if}}
-    {{#if hasReact}}
+    {{#if hasFrontend}}
     {
         files: ['./src/ui/**/*'],
         extends: [clientConfig],
