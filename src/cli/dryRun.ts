@@ -5,9 +5,12 @@ import {note} from '@clack/prompts';
 
 import type {CapturedFile} from '../utils/types.js';
 
-export function renderDryRunSummary(destination: string, files: readonly CapturedFile[]): void {
-    let filesListing = '';
+import type {DryRunSummary} from './types.js';
 
+export function buildDryRunSummary(
+    destination: string,
+    files: readonly CapturedFile[],
+): DryRunSummary {
     const sorted = [...files].sort((a, b) => {
         const aParts = a.path.split(path.sep);
         const bParts = b.path.split(path.sep);
@@ -29,11 +32,22 @@ export function renderDryRunSummary(destination: string, files: readonly Capture
         return aParts.length - bParts.length;
     });
 
-    for (const file of sorted) {
-        const rel = path.relative(destination, file.path);
-        const size = Buffer.byteLength(file.content, 'utf8');
-        filesListing += `  ${rel}  ${styleText('dim', `(${size} B)`)}\n`;
-    }
+    return {
+        title: `Would create ${files.length} files in ${destination}:`,
+        files: sorted.map((file) => ({
+            path: path.relative(destination, file.path),
+            size: Buffer.byteLength(file.content, 'utf8'),
+        })),
+    };
+}
 
-    note(filesListing, styleText('bold', `Would create ${files.length} files in ${destination}:`));
+function formatDryRunSummary(summary: DryRunSummary): string {
+    return summary.files
+        .map((file) => `  ${file.path}  ${styleText('dim', `(${file.size} B)`)}\n`)
+        .join('');
+}
+
+export function renderDryRunSummary(destination: string, files: readonly CapturedFile[]): void {
+    const summary = buildDryRunSummary(destination, files);
+    note(formatDryRunSummary(summary), styleText('bold', summary.title));
 }
