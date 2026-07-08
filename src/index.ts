@@ -7,6 +7,7 @@ import * as p from '@clack/prompts';
 import {parseCli} from './cli/args.js';
 import {renderDryRunSummary} from './cli/dryRun.js';
 import {printHelp} from './cli/help.js';
+import {buildNextSteps} from './cli/nextSteps.js';
 import type {ParsedCli} from './cli/schema.js';
 import {readVersion} from './cli/version.js';
 import {runGenerators} from './generators/index.js';
@@ -56,13 +57,7 @@ async function main(): Promise<void> {
         renderDryRunSummary(model.destination, result.files);
         p.outro(styleText('green', 'Dry run complete — no files were written'));
     } else {
-        const nextSteps = [
-            `cd ${model.projectName}`,
-            'npm install',
-            model.hasBackend ? 'npm run dev' : null,
-        ]
-            .filter(Boolean)
-            .join('\n');
+        const nextSteps = buildNextSteps(model, process.cwd()).join('\n');
         p.note(nextSteps, 'Next steps');
         p.outro(styleText('green', `✓ Project created at ${model.destination}`));
     }
