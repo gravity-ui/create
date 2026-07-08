@@ -25,7 +25,7 @@ export interface HelpFlag {
     signature: FlagSignature;
 }
 
-export interface HelpGroup {
+interface HelpGroup {
     group: FlagGroup;
     label: string;
     flags: HelpFlag[];
