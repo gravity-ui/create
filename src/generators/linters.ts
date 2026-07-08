@@ -19,7 +19,7 @@ export async function generateLinters(model: ProjectModel, fs: FileSystem): Prom
     addDevDep(model, '@gravity-ui/prettier-config', '^1.0.0');
     addDevDep(model, 'globals', '^17.0.0');
 
-    addScript(model, 'lint', 'eslint . --ext .js,.jsx,.ts,.tsx');
+    addScript(model, 'lint', 'eslint');
     addScript(model, 'prettier', 'prettier --list-different .');
 
     await fs.writeFile(
