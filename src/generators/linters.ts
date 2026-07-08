@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
-import {frontendFlags} from '../utils/frontendFlags.js';
+import {calculateFlags} from '../utils/calculateFlags.js';
 import {isModulePackage} from '../utils/isModulePackage.js';
 import {addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
@@ -11,7 +11,7 @@ import renderEslintConfig from './templates/eslint.config.js.hbs.js';
 
 export async function generateLinters(model: ProjectModel, fs: FileSystem): Promise<void> {
     const isModule = isModulePackage(model);
-    const {hasFrontend} = frontendFlags(model);
+    const {hasFrontend} = calculateFlags(model);
 
     addDevDep(model, 'eslint', '^9.0.0');
     addDevDep(model, 'prettier', '^3.0.0');

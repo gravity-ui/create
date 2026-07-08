@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import type {ProjectModel} from '../model/index.js';
-import {frontendFlags} from '../utils/frontendFlags.js';
+import {calculateFlags} from '../utils/calculateFlags.js';
 import {getDefaultEntryFileName} from '../utils/getDefaultEntryFileName.js';
 import {addDep, addDevDep, addScript} from '../utils/pm.js';
 import type {FileSystem} from '../utils/types.js';
@@ -19,8 +19,7 @@ import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
 import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
 export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): Promise<void> {
-    const {hasFrontend, hasReact} = frontendFlags(model);
-    const hasAppBuilder = model.hasBackend || hasFrontend;
+    const {hasFrontend, hasReact, hasAppBuilder} = calculateFlags(model);
 
     if (!hasAppBuilder) {
         return;
