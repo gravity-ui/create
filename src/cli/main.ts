@@ -2,9 +2,9 @@ import {styleText} from 'util';
 
 import * as p from '@clack/prompts';
 
-import {runGenerators} from '../generators/runGenerators.js';
-import {createEmptyModel} from '../model/createEmptyModel.js';
-import {runPromptFlow} from '../prompts/runPromptFlow.js';
+import {runGenerators} from '../generators/index.js';
+import {createEmptyModel} from '../model/index.js';
+import {runPromptFlow} from '../prompts/index.js';
 
 import {parseCli} from './args.js';
 import {renderDryRunSummary} from './dryRun.js';
