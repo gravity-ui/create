@@ -27,7 +27,16 @@ test.describe('listFields', () => {
 
     test('classifies boolean flags as kind "boolean"', (t: TestContext) => {
         const fields = listFields();
-        for (const name of ['frontend', 'styles', 'react', 'backend', 'yes', 'dry-run', 'help', 'version']) {
+        for (const name of [
+            'frontend',
+            'styles',
+            'react',
+            'backend',
+            'yes',
+            'dry-run',
+            'help',
+            'version',
+        ]) {
             const field = fields.find((f) => f.name === name);
             t.assert.ok(field, `expected field ${name}`);
             t.assert.equal(field?.kind, 'boolean');
