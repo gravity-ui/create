@@ -50,10 +50,18 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
         references.push({path: './src/server'});
     }
 
-    await writeJson(fs, path.join(model.destination, 'tsconfig.json'), {
-        files: [],
-        references,
-    });
+    const rootTsconfigPath = path.join(model.destination, 'tsconfig.json');
+
+    if (references.length) {
+        await writeJson(fs, rootTsconfigPath, {
+            files: [],
+            references,
+        });
+    } else if (model.language === 'ts') {
+        await writeJson(fs, rootTsconfigPath, {
+            extends: '@gravity-ui/tsconfig',
+        });
+    }
 
     if (model.language !== 'ts') {
         return;
