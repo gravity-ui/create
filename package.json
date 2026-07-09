@@ -1,0 +1,59 @@
+{
+  "name": "@gravity-ui/create",
+  "version": "0.0.0",
+  "description": "Create a new Gravity UI project",
+  "type": "module",
+  "bin": {
+    "create-gravity-ui": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.publish.json && node scripts/chmod-bin.ts",
+    "prebuild": "npm run precompile-templates",
+    "prepublishOnly": "npm run build",
+    "pretypecheck": "npm run precompile-templates",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --quiet",
+    "lint:prettier": "prettier --list-different '**/*.ts'",
+    "precompile-templates": "node scripts/precompile-templates.ts",
+    "pretest": "npm run precompile-templates",
+    "test": "node --experimental-test-module-mocks --import ./scripts/test-runner-register.js --test",
+    "test:e2e": "playwright test",
+    "preknip": "npm run precompile-templates",
+    "knip": "E2E_APP_DIR=. knip"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.6.0",
+    "handlebars": "^4.7.9",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@gravity-ui/eslint-config": "^4.3.2",
+    "@gravity-ui/prettier-config": "^1.1.1",
+    "@gravity-ui/tsconfig": "^1.0.0",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^24.13.3",
+    "eslint": "^9.39.4",
+    "knip": "^6.23.0",
+    "memfs": "^4.63.0",
+    "prettier": "^3.9.4",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gravity-ui/create.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gravity-ui/create/issues"
+  },
+  "homepage": "https://github.com/gravity-ui/create#readme",
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
+  }
+}

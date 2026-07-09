@@ -1,0 +1,12 @@
+{
+  "extends": "@gravity-ui/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./lib",
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*", "scripts/**/*", "e2e/**/*", "playwright.config.ts"]
+}
