@@ -10,7 +10,7 @@ test.describe('base generator', () => {
             projectName: 'my-app',
         });
 
-        t.assert.equal(file('/project/.npmrc'), null);
+        t.assert.equal(file('.npmrc'), null);
     });
 
     test('custom registry: writes .npmrc', async (t: TestContext) => {
@@ -20,7 +20,7 @@ test.describe('base generator', () => {
             registry: 'https://custom.registry.example/',
         });
 
-        const npmrc = file('/project/.npmrc');
+        const npmrc = file('.npmrc');
         t.assert.ok(npmrc);
         t.assert.match(String(npmrc.content), /registry=https:\/\/custom\.registry\.example\//);
     });
@@ -32,7 +32,7 @@ test.describe('base generator', () => {
             registry: 'https://registry.npmjs.org/',
         });
 
-        t.assert.equal(file('/project/.npmrc'), null);
+        t.assert.equal(file('.npmrc'), null);
     });
 
     test('registry equal to default npm registry without trailing slash: does not write obsolete .npmrc', async (t: TestContext) => {
@@ -42,7 +42,7 @@ test.describe('base generator', () => {
             registry: 'https://registry.npmjs.org',
         });
 
-        t.assert.equal(file('/project/.npmrc'), null);
+        t.assert.equal(file('.npmrc'), null);
     });
 
     test('dependencies and devDependencies are sorted alphabetically, not insertion order', async (t: TestContext) => {
@@ -60,7 +60,7 @@ test.describe('base generator', () => {
             },
         });
 
-        const pkg = file('/project/package.json');
+        const pkg = file('package.json');
         t.assert.ok(pkg);
         t.assert.deepEqual(Object.keys(pkg.content.dependencies), [
             '@gravity-ui/uikit',

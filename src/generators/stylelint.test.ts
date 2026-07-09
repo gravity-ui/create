@@ -12,7 +12,7 @@ test.describe('stylelint generator', () => {
             frontend: ['styles'],
         });
 
-        const config = file('/project/.stylelintrc.json');
+        const config = file('.stylelintrc.json');
         t.assert.ok(config);
         t.assert.deepEqual(config.content, {
             extends: [
@@ -30,6 +30,6 @@ test.describe('stylelint generator', () => {
             language: 'ts',
         });
 
-        t.assert.equal(file('/project/.stylelintrc.json'), null);
+        t.assert.equal(file('.stylelintrc.json'), null);
     });
 });

@@ -11,7 +11,7 @@ test.describe('nodekit generator', () => {
             language: 'ts',
         });
 
-        t.assert.equal(file('/project/src/server/index.ts'), null);
+        t.assert.equal(file('src/server/index.ts'), null);
     });
 
     test('backend only writes hello world server', async (t: TestContext) => {
@@ -22,7 +22,7 @@ test.describe('nodekit generator', () => {
             hasBackend: true,
         });
 
-        const server = file('/project/src/server/index.ts');
+        const server = file('src/server/index.ts');
         t.assert.ok(server);
         t.assert.match(server.content, /Hello, world!/);
         t.assert.doesNotMatch(server.content, /app-layout/);
@@ -37,7 +37,7 @@ test.describe('nodekit generator', () => {
             hasBackend: true,
         });
 
-        const server = file('/project/src/server/index.ts');
+        const server = file('src/server/index.ts');
         t.assert.ok(server);
         t.assert.match(server.content, /@gravity-ui\/app-layout/);
         t.assert.match(server.content, /assets-manifest\.json/);

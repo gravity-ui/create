@@ -14,10 +14,10 @@ export async function setupGeneratorTest(
 
     await generator(finalModel, fs);
 
-    const {file} = filesOf(fs);
+    const {file: fileByFullPath} = filesOf(fs);
 
     return {
-        file,
+        file: (path: string) => fileByFullPath(`${finalModel.destination}/${path}`),
         model: finalModel,
     };
 }

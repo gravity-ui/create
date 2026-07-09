@@ -12,7 +12,7 @@ test.describe('app-builder generator', () => {
             frontend: ['react'],
         });
 
-        const app = file('/project/src/ui/components/App/App.tsx');
+        const app = file('src/ui/components/App/App.tsx');
         t.assert.ok(app);
         t.assert.equal(
             app.content,
@@ -28,11 +28,11 @@ export function App() {
 `,
         );
 
-        const barrel = file('/project/src/ui/components/index.ts');
+        const barrel = file('src/ui/components/index.ts');
         t.assert.ok(barrel);
         t.assert.equal(barrel.content, `export {App} from './App/App';\n`);
 
-        const entry = file('/project/src/ui/entries/my-app-app.tsx');
+        const entry = file('src/ui/entries/my-app-app.tsx');
         t.assert.ok(entry);
         t.assert.equal(
             entry.content,
@@ -47,7 +47,7 @@ createRoot(document.getElementById('root')!).render(<App />);
 `,
         );
 
-        t.assert.equal(file('/project/src/App.tsx'), null);
+        t.assert.equal(file('src/App.tsx'), null);
     });
 
     test('react + JS project uses jsx/js extensions', async (t: TestContext) => {
@@ -58,10 +58,10 @@ createRoot(document.getElementById('root')!).render(<App />);
             frontend: ['react'],
         });
 
-        t.assert.ok(file('/project/src/ui/components/App/App.jsx'));
-        t.assert.ok(file('/project/src/ui/components/index.js'));
+        t.assert.ok(file('src/ui/components/App/App.jsx'));
+        t.assert.ok(file('src/ui/components/index.js'));
 
-        const entry = file('/project/src/ui/entries/my-app-app.jsx');
+        const entry = file('src/ui/entries/my-app-app.jsx');
         t.assert.ok(entry);
         t.assert.equal(
             entry.content,
@@ -85,11 +85,11 @@ createRoot(document.getElementById('root')).render(<App />);
             frontend: [],
         });
 
-        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
-        t.assert.equal(file('/project/src/ui/components/index.ts'), null);
-        t.assert.equal(file('/project/src/ui/entries/my-app-app.tsx'), null);
+        t.assert.equal(file('src/ui/components/App/App.tsx'), null);
+        t.assert.equal(file('src/ui/components/index.ts'), null);
+        t.assert.equal(file('src/ui/entries/my-app-app.tsx'), null);
 
-        const entry = file('/project/src/ui/entries/my-app-app.ts');
+        const entry = file('src/ui/entries/my-app-app.ts');
         t.assert.ok(entry);
         t.assert.equal(
             entry.content,
@@ -110,11 +110,11 @@ document.querySelector<HTMLDivElement>('#root')?.append(header);
             frontend: [],
         });
 
-        t.assert.equal(file('/project/src/ui/components/App/App.jsx'), null);
-        t.assert.equal(file('/project/src/ui/components/index.js'), null);
-        t.assert.equal(file('/project/src/ui/entries/my-app-app.jsx'), null);
+        t.assert.equal(file('src/ui/components/App/App.jsx'), null);
+        t.assert.equal(file('src/ui/components/index.js'), null);
+        t.assert.equal(file('src/ui/entries/my-app-app.jsx'), null);
 
-        const entry = file('/project/src/ui/entries/my-app-app.js');
+        const entry = file('src/ui/entries/my-app-app.js');
         t.assert.ok(entry);
         t.assert.equal(
             entry.content,
@@ -134,10 +134,10 @@ document.querySelector('#root')?.append(header);
             language: 'ts',
         });
 
-        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
-        t.assert.equal(file('/project/src/ui/components/index.ts'), null);
-        t.assert.equal(file('/project/src/ui/entries/my-app-app.ts'), null);
-        t.assert.equal(file('/project/src/ui/entries/my-app-app.tsx'), null);
+        t.assert.equal(file('src/ui/components/App/App.tsx'), null);
+        t.assert.equal(file('src/ui/components/index.ts'), null);
+        t.assert.equal(file('src/ui/entries/my-app-app.ts'), null);
+        t.assert.equal(file('src/ui/entries/my-app-app.tsx'), null);
     });
 
     test('backend-only project uses server target and writes no ui entry', async (t: TestContext) => {
@@ -156,9 +156,9 @@ document.querySelector('#root')?.append(header);
         t.assert.equal(model.scripts.start, 'node dist/server/index.js');
         t.assert.equal(model.packages.devDependencies['@gravity-ui/app-builder'], '^0.48.0');
 
-        t.assert.ok(file('/project/app-builder.config.ts'));
-        t.assert.equal(file('/project/src/ui/entries/my-app-app.ts'), null);
-        t.assert.equal(file('/project/src/ui/components/App/App.tsx'), null);
+        t.assert.ok(file('app-builder.config.ts'));
+        t.assert.equal(file('src/ui/entries/my-app-app.ts'), null);
+        t.assert.equal(file('src/ui/components/App/App.tsx'), null);
     });
 
     test('frontend + backend project uses no target flag', async (t: TestContext) => {
@@ -174,7 +174,7 @@ document.querySelector('#root')?.append(header);
         t.assert.equal(model.scripts.build, 'NODE_ENV=production app-builder build');
         t.assert.equal(model.scripts.start, 'node dist/server/index.js');
 
-        t.assert.ok(file('/project/src/ui/entries/my-app-app.ts'));
+        t.assert.ok(file('src/ui/entries/my-app-app.ts'));
     });
 
     test('app-builder.config content reflects hasReact/hasFrontend/hasBackend', async (t: TestContext) => {
@@ -186,7 +186,7 @@ document.querySelector('#root')?.append(header);
             hasBackend: true,
         });
 
-        const config = file('/project/app-builder.config.ts');
+        const config = file('app-builder.config.ts');
         t.assert.ok(config);
         t.assert.match(config.content, /newJsxTransform: true/);
         t.assert.match(config.content, /server: {/);
@@ -197,7 +197,7 @@ document.querySelector('#root')?.append(header);
             language: 'js',
             frontend: [],
         });
-        t.assert.ok(jsConfig.file('/project/app-builder.config.js'));
-        t.assert.equal(jsConfig.file('/project/app-builder.config.ts'), null);
+        t.assert.ok(jsConfig.file('app-builder.config.js'));
+        t.assert.equal(jsConfig.file('app-builder.config.ts'), null);
     });
 });

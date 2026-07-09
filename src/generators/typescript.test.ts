@@ -11,11 +11,11 @@ test.describe('typescript generator', () => {
             language: 'ts',
         });
 
-        const tsconfig = file('/project/tsconfig.json');
+        const tsconfig = file('tsconfig.json');
         t.assert.ok(tsconfig);
         t.assert.equal(tsconfig.content.extends, '@gravity-ui/tsconfig/tsconfig.json');
 
-        const buildTsconfig = file('/project/tsconfig.build.json');
+        const buildTsconfig = file('tsconfig.build.json');
         t.assert.ok(buildTsconfig);
         t.assert.equal(buildTsconfig.content.compilerOptions.declaration, true);
     });
@@ -29,19 +29,19 @@ test.describe('typescript generator', () => {
             hasBackend: true,
         });
 
-        const root = file('/project/tsconfig.json');
+        const root = file('tsconfig.json');
         t.assert.ok(root);
         t.assert.deepEqual(root.content, {
             files: [],
             references: [{path: './src/ui'}, {path: './src/server'}],
         });
 
-        const ui = file('/project/src/ui/tsconfig.json');
+        const ui = file('src/ui/tsconfig.json');
         t.assert.ok(ui);
         t.assert.equal(ui.content.compilerOptions.composite, true);
         t.assert.equal(ui.content.compilerOptions.jsx, 'react-jsx');
 
-        const server = file('/project/src/server/tsconfig.json');
+        const server = file('src/server/tsconfig.json');
         t.assert.ok(server);
         t.assert.equal(server.content.compilerOptions.composite, true);
     });
@@ -54,10 +54,10 @@ test.describe('typescript generator', () => {
             frontend: [],
         });
 
-        const root = file('/project/tsconfig.json');
+        const root = file('tsconfig.json');
         t.assert.ok(root);
         t.assert.deepEqual(root.content.references, [{path: './src/ui'}]);
 
-        t.assert.equal(file('/project/src/server/tsconfig.json'), null);
+        t.assert.equal(file('src/server/tsconfig.json'), null);
     });
 });
