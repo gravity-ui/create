@@ -25,6 +25,21 @@ test.describe('base generator', () => {
         t.assert.match(String(npmrc.content), /registry=https:\/\/custom\.registry\.example\//);
     });
 
+    test('registry with special characters: writes .npmrc unescaped', async (t: TestContext) => {
+        const {file} = await setupGeneratorTest(generateBase, {
+            destination: '/project',
+            projectName: 'my-app',
+            registry: 'https://custom.registry.example/?token=abc&scope=@my-org',
+        });
+
+        const npmrc = file('.npmrc');
+        t.assert.ok(npmrc);
+        t.assert.equal(
+            String(npmrc.content),
+            'registry=https://custom.registry.example/?token=abc&scope=@my-org\n',
+        );
+    });
+
     test('registry equal to default npm registry: does not write obsolete .npmrc', async (t: TestContext) => {
         const {file} = await setupGeneratorTest(generateBase, {
             destination: '/project',
