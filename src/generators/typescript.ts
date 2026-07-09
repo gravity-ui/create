@@ -57,6 +57,8 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
             files: [],
             references,
         });
+
+        addDevDep(model, '@gravity-ui/tsconfig', '^1.0.0');
     }
 
     if (model.language !== 'ts') {

@@ -87,11 +87,11 @@ test.describe('typescript generator', () => {
 
         t.assert.equal(model.scripts.typecheck, undefined);
         t.assert.equal(model.packages.devDependencies.typescript, undefined);
-        t.assert.equal(model.packages.devDependencies['@gravity-ui/tsconfig'], undefined);
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/tsconfig'], '^1.0.0');
     });
 
-    test('JS project with only frontend generates only src/ui tsconfig + root', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateTypeScript, {
+    test('JS project with only frontend generates only src/ui tsconfig + root, installs @gravity-ui/tsconfig', async (t: TestContext) => {
+        const {file, model} = await setupGeneratorTest(generateTypeScript, {
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
@@ -104,10 +104,13 @@ test.describe('typescript generator', () => {
 
         t.assert.ok(file('src/ui/tsconfig.json'));
         t.assert.equal(file('src/server/tsconfig.json'), null);
+
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/tsconfig'], '^1.0.0');
+        t.assert.equal(model.packages.devDependencies.typescript, undefined);
     });
 
-    test('JS project with only backend generates only src/server tsconfig + root', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateTypeScript, {
+    test('JS project with only backend generates only src/server tsconfig + root, installs @gravity-ui/tsconfig', async (t: TestContext) => {
+        const {file, model} = await setupGeneratorTest(generateTypeScript, {
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
@@ -121,10 +124,13 @@ test.describe('typescript generator', () => {
 
         t.assert.equal(file('src/ui/tsconfig.json'), null);
         t.assert.ok(file('src/server/tsconfig.json'));
+
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/tsconfig'], '^1.0.0');
+        t.assert.equal(model.packages.devDependencies.typescript, undefined);
     });
 
-    test('JS project with no frontend/backend generates no tsconfig files', async (t: TestContext) => {
-        const {file} = await setupGeneratorTest(generateTypeScript, {
+    test('JS project with no frontend/backend generates no tsconfig files, no @gravity-ui/tsconfig', async (t: TestContext) => {
+        const {file, model} = await setupGeneratorTest(generateTypeScript, {
             destination: '/project',
             projectName: 'my-app',
             language: 'js',
@@ -136,5 +142,7 @@ test.describe('typescript generator', () => {
         t.assert.equal(file('tsconfig.build.json'), null);
         t.assert.equal(file('src/ui/tsconfig.json'), null);
         t.assert.equal(file('src/server/tsconfig.json'), null);
+
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/tsconfig'], undefined);
     });
 });
