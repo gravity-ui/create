@@ -22,7 +22,7 @@ const {fs, vol} = memfs({
 vol.symlinkSync('/case-symlink/outside', '/case-symlink/cwd/escape-hatch');
 
 mock.module('node:fs', {
-    namedExports: {
+    exports: {
         existsSync: (p: string) => fs.existsSync(p),
         realpathSync: (p: string) => fs.realpathSync(p),
     },
