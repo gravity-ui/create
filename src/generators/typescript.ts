@@ -57,10 +57,6 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
             files: [],
             references,
         });
-    } else if (model.language === 'ts') {
-        await writeJson(fs, rootTsconfigPath, {
-            extends: '@gravity-ui/tsconfig',
-        });
     }
 
     if (model.language !== 'ts') {
@@ -85,7 +81,7 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
             include: ['src/**/*'],
         };
 
-        await writeJson(fs, path.join(model.destination, 'tsconfig.json'), tsconfig);
+        await writeJson(fs, rootTsconfigPath, tsconfig);
 
         const buildTsconfig: Record<string, unknown> = {
             extends: './tsconfig.json',
