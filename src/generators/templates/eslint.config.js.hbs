@@ -16,7 +16,12 @@ export default defineConfig(
     baseConfig,
     importOrderConfig,
     {
-        files: ['.prettierrc.{{#if isModule}}cjs{{else}}js{{/if}}'],
+        files: [
+            '.prettierrc.{{#if isModule}}cjs{{else}}js{{/if}}',
+            {{#if hasAppBuilder}}
+            'app-builder.config.{{#if hasTypescript}}ts{{else}}js{{/if}}',
+            {{/if}}
+        ],
         languageOptions: {
             globals: {
                 ...globals.node,

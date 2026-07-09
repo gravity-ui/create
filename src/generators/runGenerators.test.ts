@@ -125,4 +125,33 @@ test.describe('runGenerators', () => {
         t.assert.equal(pkg.content.dependencies['react-dom'], undefined);
         t.assert.equal(pkg.content.dependencies['@gravity-ui/uikit'], undefined);
     });
+
+    test('app-builder.config is linted with node globals', async (t: TestContext) => {
+        const model = createEmptyModel();
+        model.destination = '/project';
+        model.projectName = 'my-app';
+        model.language = 'ts';
+        model.hasBackend = true;
+
+        const result = await runGenerators(model, {dryRun: true});
+        const {file} = filesOf(result);
+
+        const eslintConfig = file('/project/eslint.config.mjs');
+        t.assert.ok(eslintConfig);
+        t.assert.match(eslintConfig.content, /'app-builder\.config\.ts'/);
+    });
+
+    test('eslint config skips app-builder.config when neither frontend nor backend', async (t: TestContext) => {
+        const model = createEmptyModel();
+        model.destination = '/project';
+        model.projectName = 'my-app';
+        model.language = 'ts';
+
+        const result = await runGenerators(model, {dryRun: true});
+        const {file} = filesOf(result);
+
+        const eslintConfig = file('/project/eslint.config.js');
+        t.assert.ok(eslintConfig);
+        t.assert.doesNotMatch(eslintConfig.content, /app-builder\.config/);
+    });
 });

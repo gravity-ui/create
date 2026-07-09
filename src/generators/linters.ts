@@ -11,7 +11,7 @@ import renderEslintConfig from './templates/eslint.config.js.hbs.js';
 
 export async function generateLinters(model: ProjectModel, fs: FileSystem): Promise<void> {
     const isModule = isModulePackage(model);
-    const {hasFrontend} = calculateFlags(model);
+    const {hasFrontend, hasAppBuilder} = calculateFlags(model);
 
     addDevDep(model, 'eslint', '^9.0.0');
     addDevDep(model, 'prettier', '^3.0.0');
@@ -29,6 +29,7 @@ export async function generateLinters(model: ProjectModel, fs: FileSystem): Prom
             hasTypescript: model.language === 'ts',
             hasFrontend,
             hasBackend: model.hasBackend,
+            hasAppBuilder,
         }),
     );
 
