@@ -36,6 +36,7 @@
     "@playwright/test": "^1.61.1",
     "@types/node": "^24.13.3",
     "eslint": "^9.39.4",
+    "eslint-plugin-n": "^18.2.1",
     "knip": "^6.23.0",
     "memfs": "^4.63.0",
     "prettier": "^3.9.4",

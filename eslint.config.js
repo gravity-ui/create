@@ -1,6 +1,7 @@
 import baseConfig from '@gravity-ui/eslint-config';
 import importOrderConfig from '@gravity-ui/eslint-config/import-order';
 import {defineConfig, globalIgnores} from 'eslint/config';
+import node from 'eslint-plugin-n';
 
 export default defineConfig(
     globalIgnores(
@@ -9,6 +10,26 @@ export default defineConfig(
     ),
     baseConfig,
     importOrderConfig,
+    {
+        plugins: {
+            n: node,
+        },
+        extends: ['n/recommended-module'],
+        files: ['./src/**/*'],
+        ignores: ['./src/**/__fixtures__/**/*', './src/**/*.test.ts'],
+    },
+    {
+        plugins: {
+            n: node,
+        },
+        extends: ['n/recommended-module'],
+        files: ['./src/**/__fixtures__/**/*', './src/**/*.test.ts'],
+        settings: {
+            node: {
+                version: '^24',
+            },
+        },
+    },
     {
         files: ['./src/**/*'],
         ignores: ['./src/utils/fs.ts'],
