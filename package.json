@@ -15,6 +15,7 @@
     "prepublishOnly": "npm run build",
     "pretypecheck": "npm run precompile-templates",
     "typecheck": "tsc --noEmit",
+    "prelint": "npm run precompile-templates",
     "lint": "eslint --quiet",
     "lint:prettier": "prettier --list-different '**/*.ts'",
     "precompile-templates": "node scripts/precompile-templates.ts",
@@ -36,13 +37,14 @@
     "@playwright/test": "^1.61.1",
     "@types/node": "^24.13.3",
     "eslint": "^9.39.4",
+    "eslint-plugin-n": "^18.2.1",
     "knip": "^6.23.0",
     "memfs": "^4.63.0",
     "prettier": "^3.9.4",
     "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=22.4"
+    "node": "^22.13.0 || >=23.5.0"
   },
   "repository": {
     "type": "git",

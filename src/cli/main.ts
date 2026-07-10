@@ -5,6 +5,7 @@ import * as p from '@clack/prompts';
 import {runGenerators} from '../generators/index.js';
 import {createEmptyModel} from '../model/index.js';
 import {runPromptFlow} from '../prompts/index.js';
+import {ExitSignal} from '../utils/exit.js';
 
 import {parseCli} from './args.js';
 import {renderDryRunSummary} from './dryRun.js';
@@ -21,18 +22,18 @@ export async function main(): Promise<void> {
         const msg = err instanceof Error ? err.message : String(err);
         process.stderr.write(styleText('red', `Error:\n${msg}`) + '\n');
         process.stderr.write('Run with --help for usage.\n');
-        process.exit(1);
+        throw new ExitSignal(1);
     }
 
     if (cli.help) {
         printHelp();
-        process.exit(0);
+        return;
     }
 
     if (cli.version) {
         const version = readVersion();
         process.stdout.write(version + '\n');
-        process.exit(0);
+        return;
     }
 
     p.intro(styleText(['bgCyan', 'black'], '🪐 @gravity-ui/create '));
