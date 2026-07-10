@@ -17,6 +17,13 @@ export default defineConfig(
         extends: ['n/recommended-module'],
         files: ['./src/**/*'],
         ignores: ['./src/**/__fixtures__/**/*', './src/**/*.test.ts'],
+        settings: {
+            node: {
+                convertPath: {
+                    'src/**/*.ts': ['^src/(.+)\\.ts$', 'lib/$1.js'],
+                },
+            },
+        },
     },
     {
         plugins: {
@@ -28,6 +35,17 @@ export default defineConfig(
             node: {
                 version: '^24',
             },
+        },
+        rules: {
+            'n/no-unsupported-features/node-builtins': [
+                'error',
+                {
+                    ignores: [
+                        // In worth case scenario we will get unit-test failure
+                        'test.mock.module',
+                    ],
+                },
+            ],
         },
     },
     {
