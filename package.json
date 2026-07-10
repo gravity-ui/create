@@ -15,6 +15,7 @@
     "prepublishOnly": "npm run build",
     "pretypecheck": "npm run precompile-templates",
     "typecheck": "tsc --noEmit",
+    "prelint": "npm run precompile-templates",
     "lint": "eslint --quiet",
     "lint:prettier": "prettier --list-different '**/*.ts'",
     "precompile-templates": "node scripts/precompile-templates.ts",
