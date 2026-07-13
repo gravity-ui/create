@@ -20,7 +20,7 @@ npm create @gravity-ui
 | Flag | Description |
 | --- | --- |
 | `--out <path>` | Destination folder for the new project |
-| `--language <ts|js>` | Project language (ts|js) |
+| `--language <ts\|js>` | Project language (ts\|js) |
 | `--frontend, --no-frontend` | Include frontend setup |
 | `--styles, --no-styles` | Include stylelint (requires --frontend) |
 | `--react, --no-react` | Include React + JSX transform (requires --frontend) |

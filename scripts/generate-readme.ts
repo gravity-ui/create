@@ -37,6 +37,10 @@ const [readmeSource, flagsTableSource, pkgSource] = await Promise.all([
     readFile(path.join(rootDir, 'package.json'), 'utf8'),
 ]);
 
+Handlebars.registerHelper(
+    'tableCell',
+    (value: string) => new Handlebars.SafeString(value.replaceAll('|', '\\|')),
+);
 Handlebars.registerPartial('flagsTable', flagsTableSource);
 const template = Handlebars.compile(readmeSource);
 process.stdout.write(template(buildContext(JSON.parse(pkgSource))));
