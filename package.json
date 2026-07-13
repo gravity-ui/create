@@ -19,6 +19,7 @@
     "lint": "eslint --quiet",
     "lint:prettier": "prettier --list-different '**/*.ts'",
     "precompile-templates": "node scripts/precompile-templates.ts",
+    "generate-readme": "node --import ./scripts/test-runner-register.js scripts/generate-readme.ts > README.md",
     "pretest": "npm run precompile-templates",
     "test": "node --experimental-test-module-mocks --import ./scripts/test-runner-register.js --test",
     "test:e2e": "playwright test",
