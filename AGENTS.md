@@ -27,6 +27,7 @@ All `npm`/`node`/`npx` commands below MUST be prefixed with `nvm use &&` — wro
 - `npm run lint -- --fix` and `npm run lint:prettier` — run once a file is believed done (style pass, not per-edit).
 - `npm run knip` — run before declaring work finished, to catch unused exports left behind by a refactor. The dummy `E2E_APP_DIR=.` in its script exists only so knip's Playwright plugin can import `playwright.config.ts` (which throws if unset) — it's never used to actually launch anything.
 - `.hbs` templates compile to gitignored `.hbs.ts` (never hand-edit). Regen is hooked into `pretest`/`pretypecheck`/`prebuild`/`preknip`, so `npm test`/`npm run knip` always see fresh output — `npx tsc --noEmit` doesn't, run `npm run precompile-templates` manually first if `.hbs` files changed. See `templates/AGENTS.md`.
+- `README.md` is generated (see header comment) — `scripts/generate-readme.test.ts` catches drift.
 
 ## Conventions
 
@@ -41,41 +42,11 @@ All `npm`/`node`/`npx` commands below MUST be prefixed with `nvm use &&` — wro
 
 ## Generated project structure
 
-Three shapes: app-builder layout (frontend and/or backend selected), plain TS entry (neither, `ts`), plain JS entry (neither, `js`).
-
-**App-builder layout.** Worked example below is `ts` / backend / frontend + styles + react (all features on); annotations mark what's conditional:
-
-```
-.
-|-- .gitignore
-|-- .prettierrc.js
-|-- .stylelintrc.json          # only with styles
-|-- README.md
-|-- app-builder.config.ts
-|-- eslint.config.mjs
-|-- package.json
-|-- tsconfig.json              # references ui/ and/or server/; both languages
-`-- src/
-    |-- server/                # only if hasBackend
-    |   |-- index.ts           # expresskit+nodekit+app-layout init; ext by language
-    |   `-- tsconfig.json
-    `-- ui/                    # only if frontend enabled
-        |-- tsconfig.json
-        |-- entries/
-        |   `-- my-app-app.tsx # entry (>=1 allowed); name from project; ext/case by react+language
-        |-- components/       # only if react enabled
-        |   |-- index.ts      # re-exports App; ext by language
-        |   `-- App/
-        |       `-- App.tsx   # demo component; ext by language
-        `-- types/
-            `-- assets.d.ts   # only ts+react
-```
+See [README.md](./README.md#what-gets-generated) for the three shapes and the app-builder directory layout.
 
 Dev/build scripts pick a side via `--target <client|server>` when only one of ui/server exists.
 
-**Neither frontend nor backend, TypeScript** — plain `src/index.ts`, no app-builder, straight `tsc` compile.
-
-**Neither frontend nor backend, JavaScript** — plain `index.js` at project root, not under `src/`. Intentional: with no bundler and no frontend/backend, there's no convention to commit to, so the entry stays at the root instead of guessing a layout.
+Plain-JS shape's entry stays at project root, not under `src/`: with no bundler and no frontend/backend, there's no convention to commit to, so it stays at the root instead of guessing a layout.
 
 ## Valid parameter combinations
 

@@ -1,0 +1,68 @@
+<!--
+  GENERATED FILE — do not edit README.md directly, edit scripts/readme/readme.hbs instead.
+  Regenerate with `npm run generate-readme`.
+-->
+
+# @gravity-ui/create
+
+> Scaffold a Gravity UI stack project in seconds.
+
+## Quick start
+
+```bash
+npm create @gravity-ui
+```
+
+## Flags
+
+{{> flagsTable}}
+
+## Examples
+
+{{#each examples}}
+```bash
+{{this.cmd}}
+```
+
+{{this.comment}}
+
+{{/each}}
+## What gets generated
+
+Three shapes: app-builder layout (frontend and/or backend selected), plain TS entry (neither, `ts`), plain JS entry (neither, `js`).
+
+**App-builder layout.** Worked example below is `ts` / backend / frontend + styles + react (all features on); annotations mark what's conditional:
+
+```
+.
+|-- .gitignore
+|-- .prettierrc.js
+|-- .stylelintrc.json          # only with styles
+|-- README.md
+|-- app-builder.config.ts
+|-- eslint.config.mjs
+|-- package.json
+|-- tsconfig.json              # references ui/ and/or server/; both languages
+`-- src/
+    |-- server/                # only if hasBackend
+    |   |-- index.ts           # expresskit+nodekit+app-layout init; ext by language
+    |   `-- tsconfig.json
+    `-- ui/                    # only if frontend enabled
+        |-- tsconfig.json
+        |-- entries/
+        |   `-- my-app-app.tsx # entry (>=1 allowed); name from project; ext/case by react+language
+        |-- components/       # only if react enabled
+        |   |-- index.ts      # re-exports App; ext by language
+        |   `-- App/
+        |       `-- App.tsx   # demo component; ext by language
+        `-- types/
+            `-- assets.d.ts   # only ts+react
+```
+
+**Neither frontend nor backend, TypeScript** — plain `src/index.ts`, no app-builder, straight `tsc` compile.
+
+**Neither frontend nor backend, JavaScript** — plain `index.js` at project root.
+
+## Requirements
+
+Node.js `{{{engines}}}`.

@@ -6,6 +6,7 @@
     "moduleResolution": "NodeNext",
     "outDir": "./lib",
     "resolveJsonModule": true,
+    "checkJs": true,
     "types": ["node"]
   },
   "include": ["src/**/*", "scripts/**/*", "e2e/**/*", "playwright.config.ts"]

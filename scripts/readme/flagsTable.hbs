@@ -1,0 +1,10 @@
+{{#each groups}}
+**{{this.label}}**
+
+| Flag | Description |
+| --- | --- |
+{{#each this.flags}}
+| `{{{this.signature}}}` | {{{this.description}}} |
+{{/each}}
+
+{{/each}}
