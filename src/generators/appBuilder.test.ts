@@ -154,7 +154,7 @@ document.querySelector('#root')?.append(header);
             'NODE_ENV=production app-builder build --target server',
         );
         t.assert.equal(model.scripts.start, 'node dist/server/index.js');
-        t.assert.equal(model.packages.devDependencies['@gravity-ui/app-builder'], '^0.48.0');
+        t.assert.equal(model.packages.devDependencies['@gravity-ui/app-builder'], '^0.49.0');
 
         t.assert.ok(file('app-builder.config.ts'));
         t.assert.equal(file('src/ui/entries/my-app-app.ts'), null);

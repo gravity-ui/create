@@ -40,6 +40,7 @@ test.describe('typescript generator', () => {
         t.assert.ok(ui);
         t.assert.equal(ui.content.compilerOptions.composite, true);
         t.assert.equal(ui.content.compilerOptions.jsx, 'react-jsx');
+        t.assert.deepEqual(ui.content.compilerOptions.types, ['@gravity-ui/app-builder/ui']);
 
         const server = file('src/server/tsconfig.json');
         t.assert.ok(server);

@@ -19,6 +19,7 @@ export async function generateTypeScript(model: ProjectModel, fs: FileSystem): P
                 composite: true,
                 outDir: '../../dist/ui',
                 rootDir: '.',
+                types: ['@gravity-ui/app-builder/ui'],
             },
             include: ['**/*'],
         };

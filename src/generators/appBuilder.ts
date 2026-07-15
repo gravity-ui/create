@@ -16,7 +16,6 @@ import renderEntryJs from './templates/src/ui/entries/entry.js.hbs.js';
 import renderEntryJsx from './templates/src/ui/entries/entry.jsx.hbs.js';
 import renderEntryTs from './templates/src/ui/entries/entry.ts.hbs.js';
 import renderEntryTsx from './templates/src/ui/entries/entry.tsx.hbs.js';
-import renderAssetsTypes from './templates/src/ui/types/assets.d-ts.hbs.js';
 
 export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): Promise<void> {
     const {hasFrontend, hasReact, hasAppBuilder} = calculateFlags(model);
@@ -33,7 +32,7 @@ export async function generateAppBuilder(model: ProjectModel, fs: FileSystem): P
         target = ' --target client';
     }
 
-    addDevDep(model, '@gravity-ui/app-builder', '^0.48.0');
+    addDevDep(model, '@gravity-ui/app-builder', '^0.49.0');
 
     if (model.hasBackend) {
         addScript(model, 'start', 'node dist/server/index.js');
@@ -93,10 +92,6 @@ async function writeReactFiles(
         barrelFile,
         isTs ? renderComponentsIndexTs({}) : renderComponentsIndexJs({}),
     );
-
-    if (isTs) {
-        await fs.writeFile(path.join(uiDir, 'types', 'assets.d.ts'), renderAssetsTypes({}));
-    }
 }
 
 async function writeEntryFile(
