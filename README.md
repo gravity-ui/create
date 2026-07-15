@@ -98,12 +98,10 @@ Three shapes: app-builder layout (frontend and/or backend selected), plain TS en
         |-- tsconfig.json
         |-- entries/
         |   `-- my-app-app.tsx # entry (>=1 allowed); name from project; ext/case by react+language
-        |-- components/       # only if react enabled
-        |   |-- index.ts      # re-exports App; ext by language
-        |   `-- App/
-        |       `-- App.tsx   # demo component; ext by language
-        `-- types/
-            `-- assets.d.ts   # only ts+react
+        `-- components/       # only if react enabled
+            |-- index.ts      # re-exports App; ext by language
+            `-- App/
+                `-- App.tsx   # demo component; ext by language
 ```
 
 **Neither frontend nor backend, TypeScript** — plain `src/index.ts`, no app-builder, straight `tsc` compile.
